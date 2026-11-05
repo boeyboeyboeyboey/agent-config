@@ -1,0 +1,10 @@
+# Documented portable subset; a runtime may include additional machine-specific settings.
+model = "gpt-6.1-sol"
+model_reasoning_effort = "xhigh"
+sandbox_mode = "workspace-write"
+
+[agents]
+default_subagent_model = "gpt-6-luna"
+default_subagent_reasoning_effort = "high"
+max_concurrent_threads_per_session = 6
+max_depth = 1

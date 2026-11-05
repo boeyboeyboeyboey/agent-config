@@ -1,0 +1,277 @@
+{
+  "purpose": "Read-only execpolicy cases for staged rules; commands are checked, never executed.",
+  "check_command_template": "codex execpolicy check --pretty --rules codex/rules/default.rules -- <command>",
+  "expected_values": {
+    "prompt": "A matching rule requests approval for that invocation; this is not authorization.",
+    "no_matching_rule": "No staged prefix rule matched. This result does not mean the command is authorized or allowed."
+  },
+  "cases": [
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "expected": "no_matching_rule"
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--list"
+      ],
+      "expected": "no_matching_rule"
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "list"
+      ],
+      "expected": "no_matching_rule"
+    },
+    {
+      "command": [
+        "git",
+        "stash",
+        "list"
+      ],
+      "expected": "no_matching_rule"
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "msg"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "main"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "pull"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "merge",
+        "feature"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "rebase",
+        "main"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "reset",
+        "--hard",
+        "HEAD"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "switch",
+        "main"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--",
+        "file.txt"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "stash",
+        "push"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "stash",
+        "pop"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "-d",
+        "feature"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "-D",
+        "feature"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--delete",
+        "feature"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--force",
+        "main",
+        "HEAD~1"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "remove",
+        "../feature"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "worktree",
+        "prune"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "push",
+        "origin",
+        "main"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "stash",
+        "pop"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "branch",
+        "-d",
+        "feature"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "worktree",
+        "remove",
+        "../feature"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "--no-pager",
+        "push",
+        "origin",
+        "main"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "--no-optional-locks",
+        "rebase",
+        "main"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "--no-pager",
+        "push",
+        "origin",
+        "main"
+      ],
+      "expected": "prompt"
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "/repo",
+        "push",
+        "origin",
+        "main"
+      ],
+      "expected": "no_matching_rule",
+      "reason": "Arbitrary -C paths are not expressible as literal-prefix tokens."
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "color.ui=false",
+        "push",
+        "origin",
+        "main"
+      ],
+      "expected": "no_matching_rule",
+      "reason": "Arbitrary -c values shift the subcommand position."
+    },
+    {
+      "command": [
+        "bash",
+        "-lc",
+        "git status --short && git push origin main"
+      ],
+      "expected": "not_testable",
+      "observed_by_execpolicy_check": "no_matching_rule",
+      "reason": "The official Rules guide documents tree-sitter splitting for this simple chain, but this installed execpolicy check did not expose that behavior; runtime chain decomposition remains unverified here."
+    }
+  ]
+}

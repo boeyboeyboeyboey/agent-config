@@ -1,0 +1,47 @@
+# These rules only prompt for matching commands Codex would run outside the
+# sandbox. They do not govern commands already allowed inside the sandbox.
+
+prefix_rule(
+    pattern = [["git", "/usr/bin/git"], ["commit", "push", "pull", "merge", "rebase", "reset", "switch", "checkout"]],
+    decision = "prompt",
+    justification = "Requires explicit user approval for this specific action.",
+    match = ["git commit -m message", "git push origin main", "/usr/bin/git pull", "git checkout -- file.txt"],
+    not_match = ["git status --short", "git branch --list", "git worktree list", "git stash list"],
+)
+
+prefix_rule(
+    pattern = [["git", "/usr/bin/git"], ["--no-pager", "--no-optional-locks"], ["commit", "push", "pull", "merge", "rebase", "reset", "switch", "checkout"]],
+    decision = "prompt",
+    justification = "Requires explicit user approval for this specific action.",
+    match = ["git --no-pager push origin main", "git --no-optional-locks rebase main", "/usr/bin/git --no-pager push origin main"],
+    not_match = ["git --no-pager status --short", "git --no-optional-locks branch --list", "/usr/bin/git --no-pager status --short"],
+)
+
+prefix_rule(
+    pattern = [["git", "/usr/bin/git"], "stash", ["push", "save", "pop", "apply", "drop", "clear", "create", "store"]],
+    decision = "prompt",
+    justification = "Requires explicit user approval for this specific action.",
+    match = ["git stash push -m work", "git stash pop", "git stash apply", "git stash drop"],
+    not_match = ["git stash list"],
+)
+
+prefix_rule(
+    pattern = [["git", "/usr/bin/git"], "branch", ["-d", "-D", "--delete", "-f", "--force"]],
+    decision = "prompt",
+    justification = "Requires explicit user approval for this specific branch deletion or forced branch update.",
+    match = ["git branch -d feature", "git branch -D feature", "git branch --delete feature", "git branch --force main HEAD~1"],
+    not_match = ["git branch --list", "git branch -a"],
+)
+
+prefix_rule(
+    pattern = [["git", "/usr/bin/git"], "worktree", ["remove", "prune"]],
+    decision = "prompt",
+    justification = "Requires explicit user approval for this specific worktree removal or prune.",
+    match = ["git worktree remove ../feature", "git worktree remove --force ../feature", "git worktree prune"],
+    not_match = ["git worktree list", "git worktree add ../feature"],
+)
+
+# A literal-prefix rule cannot match an arbitrary -C path or arbitrary -c
+# value at a fixed position. Those forms are intentionally not covered here.
+# Bare git stash, additional option combinations, and wrapped commands are also
+# outside these prefixes. The global Git authorization policy still applies.
