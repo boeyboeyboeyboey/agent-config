@@ -20,10 +20,15 @@ Personal [Codex](codex/AGENTS.md) and [Claude Code](claude/CLAUDE.md) setup. [Mo
 
 Codex files: [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules), [skills](codex/skills/), [rule checks and gaps](verification/git-policy-cases.json).
 
-Claude files: [install prompt](claude/install-prompt.md), [agents](claude/agents/), [frontend rule](claude/rules/frontend.md), [skills](claude/skills/), [settings example](claude/settings.example.json).
+Claude files: [install prompt](claude/install-prompt.md), [agents](claude/agents/), [frontend rule](claude/rules/frontend.md), [settings example](claude/settings.example.json).
 
-- **Citation audit** — match cited claims to source passages before graded or external submission. [Skill](claude/skills/citation-audit/SKILL.md)
-- **Slides** — flag pages for visual review with `python-pptx` and `pdfplumber`. Render PowerPoint with LibreOffice (`soffice`) and export `.key` files with Keynote on macOS. Check diagrams built from shapes and PDFs with recurring picture layouts manually. The script can miss both. [Skill](claude/skills/slides/SKILL.md)
 - **Claude Git** — one chat approval per routine action. The settings example prompts for selected destructive commands. `git push origin main --force` falls outside those patterns and is covered by the prose rule. [Git safety](claude/CLAUDE.md#git-safety-all-agents)
+
+## Claude skills
+
+- [handover](claude/skills/handover/SKILL.md) — current state, checks, next steps, and a kickoff prompt for a fresh chat.
+- [init-project](claude/skills/init-project/SKILL.md) — project `CLAUDE.md` with checked commands and repo conventions, shown for approval before saving.
+- [citation-audit](claude/skills/citation-audit/SKILL.md) — match cited claims to exact source passages before graded or external submission.
+- [slides](claude/skills/slides/SKILL.md) — write slides and review decks or PDFs. View every page for decks of 15 pages or fewer. For longer decks, use the inventory plus visual checks where the task depends on charts, diagrams, or layouts. Uses `python-pptx` and `pdfplumber`, LibreOffice for PowerPoint rendering, and Keynote on macOS for `.key` exports.
 
 [MIT license](LICENSE).

@@ -18,13 +18,12 @@ Rules:
   scanned pages, slide screenshots, tables pasted as pictures, photos of documents.
   When searching PDFs or slides, run
   `python3 ~/.claude/skills/slides/scripts/slide_inventory.py <file.pptx|file.pdf>` to
-  list every page with pictures, charts, diagrams or little text (including pages that
-  are half text, half image), and view each listed page directly with Read (it
-  renders PDF pages and images). For .pptx, first convert to PDF in a temp folder with
-  `soffice --headless --convert-to pdf --outdir <temp dir> <file>`; for .key, export to
-  PDF with Keynote via osascript. "Image-only, no extractable text" is never a final
-  answer: it means render and view. Report a page as unreadable only if rendering
-  failed, with the error. If there are too many to view, list them as unchecked.
+  flag pages with pictures, charts, drawn diagrams, or little text. View every page on
+  the list, every page of a deck of 15 pages or fewer, and any page whose text reads
+  like figure labels. Run the inventory on the original PPTX. For PPTX or Keynote
+  rendering, ask the main agent for a scratch PDF. For Keynote, use that PDF for the
+  inventory too. View the PDF pages directly with Read. For image-only pages, render
+  and view them. Report rendering errors and list any pages you could not check.
 - Never report "not found" / "none" as a fact. Say exactly what you covered and how:
   e.g. "No prices in the text layer of itinerary.pdf (pp. 1–4); pages 2–3 are images,
   viewed: none found" or "...pages 5–9 are image-only and were NOT checked".
