@@ -133,6 +133,11 @@ implementation and review tasks as below.
   cause substantial rework,
   a short Terra assessment may help before implementation. Leave original brand/art
   direction and full visual-system choices to the main agent or Sol.
+
+  Use Terra `medium` when a piece of writing benefits from a dedicated drafting or
+  revision pass, such as a website information page, speaker notes, a presentation
+  script, or a report. Provide the audience, purpose, tone, and relevant source
+  material. The main agent owns the analysis, decisions, and final fact check.
 - **Astra `low`:** disabled by default. Consider one bounded, read-only critique only
   when a specific unresolved assumption could cause serious cascading rework and the
   added value justifies the limited allowance. First use available evidence and existing

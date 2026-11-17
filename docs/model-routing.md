@@ -12,6 +12,7 @@ aliases can change. Recheck the actual model offered by the account before reuse
 | Scoped implementation and routine code review | Luna `xhigh` | A local escalation for harder bounded work. Review difficulty and evidence decide when to use Sol; the author's model alone does not. |
 | Complex engineering, planning, difficult review | Sol `medium`/`high` | Matches OpenAI's guidance for complex technical work. Main-model configuration currently uses `xhigh`; delegated roles are separately scoped. |
 | Images, screens, bounded app workflows | Terra `medium` | Officially supported visual reasoning and computer use; `medium` is the documented starting effort. Higher efforts remain bounded exceptions. |
+| Longer drafts and revisions | Terra `medium` | Clear prose from a brief and relevant source material. The main agent owns analysis, decisions, and final fact-checking. |
 | Exceptional read-only critique | Astra `low`, approval-only | A personal usage-control rule. No benchmark establishes that this is the universally best planning configuration. |
 
 Sources: OpenAI's [model-selection guide](https://developers.openai.com/api/docs/guides/model-selection)
@@ -27,6 +28,15 @@ Exact chart-only scores were not visually verified here and are not reproduced.
 For layout review, use explicit criteria: alignment, clipping, spacing, reference
 fidelity, readable text, and task completion. Broader product and design decisions
 remain judgments to assess against the user's goals.
+
+Writing evidence reviewed 6 November 2026. OpenAI recommends Terra for concise
+writing from supplied material. On ToneBench at `medium`, GPT-6.1 Terra scored
+slightly higher on clarity than GPT-5.6 Terra and GPT-6.1 Sol. Both scored higher on
+matching the author's voice and on the overall writing score. ToneBench uses ten
+YouTube briefs in one creator's voice, so this setup treats Terra as a candidate
+for drafting website copy, speaker notes, scripts, and reports. Medium is the
+existing starting effort. [OpenAI writing guidance](https://developers.openai.com/api/docs/guides/model-selection#when-to-consider-gpt-61-terra)
+· [ToneBench results](https://benchmark.towardsai.com/compare/family-openai.html)
 
 ## Claude Code
 

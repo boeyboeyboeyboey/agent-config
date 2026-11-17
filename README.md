@@ -8,7 +8,7 @@ Personal [Codex](codex/AGENTS.md) and [Claude Code](claude/CLAUDE.md) setup. [Mo
 
 - **Delegation:** keep the main chat focused; bounded subagent tasks; clear file ownership; small checks handled directly.
 
-- **Codex routing:** Luna for routine work; Terra for images and screen/app tasks; Sol for complex engineering; Astra approval-only.
+- **Codex routing:** Luna for routine work; Terra for visual work, app tasks, and longer drafts; Sol for complex engineering; Astra approval-only.
 
 - **Claude routing:** Haiku/medium for scout and worker; Sonnet/high for senior and reviewer. Main model selected in Claude. Pro budget; no extra paid usage.
 
