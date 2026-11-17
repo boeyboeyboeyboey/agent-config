@@ -16,9 +16,15 @@ Rules:
   node_modules, build output, lockfiles, generated or minified files unless asked.
 - Text extraction (pdftotext, rtf/html to text, grep) misses anything inside images:
   scanned pages, slide screenshots, tables pasted as pictures, photos of documents.
-  When searching PDFs, slides, or image-heavy docs, look for pages with little or no
-  extractable text, or with embedded images, and view them directly with Read (it
-  renders PDF pages and images). If there are too many to view, list them as unchecked.
+  When searching PDFs or slides, run
+  `python3 ~/.claude/skills/slides/scripts/slide_inventory.py <file.pptx|file.pdf>` to
+  list every page with pictures, charts, diagrams or little text (including pages that
+  are half text, half image), and view each listed page directly with Read (it
+  renders PDF pages and images). For .pptx, first convert to PDF in a temp folder with
+  `soffice --headless --convert-to pdf --outdir <temp dir> <file>`; for .key, export to
+  PDF with Keynote via osascript. "Image-only, no extractable text" is never a final
+  answer: it means render and view. Report a page as unreadable only if rendering
+  failed, with the error. If there are too many to view, list them as unchecked.
 - Never report "not found" / "none" as a fact. Say exactly what you covered and how:
   e.g. "No prices in the text layer of itinerary.pdf (pp. 1–4); pages 2–3 are images,
   viewed: none found" or "...pages 5–9 are image-only and were NOT checked".

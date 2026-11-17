@@ -2,7 +2,7 @@
 
 These rules apply to all work, coding or not; for non-coding tasks, apply the same
 delegation principles and skip the code-specific steps. Procedures live in the
-`handover` and `init-project` skills, `~/.claude/rules/frontend.md`, and the agent files.
+`handover`, `init-project`, `citation-audit` and `slides` skills, `~/.claude/rules/frontend.md`, and the agent files.
 
 ## Working with me (main agent only)
 
@@ -125,8 +125,10 @@ model. Never pass `model: "opus"`. Never use `subagent_type: "fork"`.
 objective; exact files or scope and strict ownership boundaries; decisions already
 made; the report format if it differs from the agent's default; an instruction not to
 expand scope. For search prompts, put `Thoroughness: quick | medium | very thorough` on
-the first line. For PDFs, slides or images, tell it to view image-only pages and to
-state coverage for any "not found". Never assign overlapping edits to concurrent agents.
+the first line. For slides, PDFs or images, "look at" means extract the text, then
+render and view any page with little or no text (steps in the `slides` skill); "image
+only" is never a final answer. Ask it to state coverage for any "not found". Never
+assign overlapping edits to concurrent agents.
 
 **Running them.** Launch independent pieces in parallel, but don't split work just to
 parallelize. When your next step depends on the result, pass `run_in_background:
@@ -187,11 +189,23 @@ commit/PR messages:
   kickers, tags that name the section). Number things only when order matters.
 - If deleting a line loses no information, delete it. Keep real content and anything
   needed for accessibility or correctness.
+- Dates: always write the month as an English name, short or long (10 Nov, 10 November,
+  10 Nov 2026). Never numeric forms like 11-10 or 11/10, which are ambiguous between
+  DD/MM and MM/DD. Exception: ISO 8601 (2026-11-10) where code, filenames, or data
+  formats require it.
 
-Slides: one point per slide, and the headline states it. Cut kickers and subtitles that
-restate or soften it; if needed, rewrite the headline or split the slide. A second line
-only for a number, a source, or evidence. Explanations go in speaker notes. Section
-labels only on divider slides.
+Reading or making slides: use the `slides` skill.
+
+## Sourced claims (all agents)
+
+- Before a cited claim goes into graded or external writing, note the supporting quote
+  (file, page or slide, exact words). If the source doesn't say it, drop the citation or
+  write it as our own inference. Never attribute a combination of separate points to
+  the source.
+- If a source quotes someone else, cite the original or write "as cited in".
+- Label checks precisely: "exists/listed", "abstract only", or "claim matched to quote".
+  Never plain "verified". Treat inherited labels as unconfirmed for final work.
+- Before a graded or external submission, run the `citation-audit` skill.
 
 ## 6. Completion
 

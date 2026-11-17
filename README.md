@@ -20,6 +20,10 @@ Personal [Codex](codex/AGENTS.md) and [Claude Code](claude/CLAUDE.md) setup. [Mo
 
 Codex files: [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules), [skills](codex/skills/), [rule checks and gaps](verification/git-policy-cases.json).
 
-Claude files: [agents](claude/agents/), [frontend rule](claude/rules/frontend.md), [skills](claude/skills/). Static configuration checked; native Claude execution unverified.
+Claude files: [install prompt](claude/install-prompt.md), [agents](claude/agents/), [frontend rule](claude/rules/frontend.md), [skills](claude/skills/), [settings example](claude/settings.example.json).
+
+- **Citation audit** — match cited claims to source passages before graded or external submission. [Skill](claude/skills/citation-audit/SKILL.md)
+- **Slides** — flag pages for visual review with `python-pptx` and `pdfplumber`. Render PowerPoint with LibreOffice (`soffice`) and export `.key` files with Keynote on macOS. Check diagrams built from shapes and PDFs with recurring picture layouts manually. The script can miss both. [Skill](claude/skills/slides/SKILL.md)
+- **Claude Git** — one chat approval per routine action. The settings example prompts for selected destructive commands. `git push origin main --force` falls outside those patterns and is covered by the prose rule. [Git safety](claude/CLAUDE.md#git-safety-all-agents)
 
 [MIT license](LICENSE).
