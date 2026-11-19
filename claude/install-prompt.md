@@ -14,13 +14,13 @@ Inspect whether these exist and what they contain: `~/.claude/CLAUDE.md`, `~/.cl
 
 Show this checklist in one message with the defaults marked. Ask me to reply `defaults` or list changes. If your client has a multiple-choice tool, use it in several rounds. If I choose an item with an unmet dependency, ask me to resolve that conflict before the plan; do not silently add modules.
 
-**A. Agents** (files in `~/.claude/agents/`)
+A. Agents (files in `~/.claude/agents/`)
 - A1 `scout`: Haiku, read-only search, reading, and summarising. *(default: on; uses the slide inventory script from E5 or an existing compatible copy)*
 - A2 `worker`: Haiku, executes tasks from a precise spec and runs checks. *(default: on)*
 - A3 `senior`: Sonnet, bounded work needing judgment (UI polish, debugging, tricky multi-file changes); capped at 45 turns. *(default: on)*
 - A4 `reviewer`: Sonnet, independent fixed-checklist reviewer; reports blockers, majors, minors, PASS/FAIL, and never edits. *(default: on)*
 
-**B. Working-style rules** (in `CLAUDE.md`)
+B. Working-style rules (in `CLAUDE.md`)
 - B1 Blunt feedback: no flattery; say plainly when I'm wrong. *(default: on)*
 - B2 Sanity-check requests and surface a better approach when there is a real problem. *(default: on)*
 - B3 Ask only about ambiguities that materially change the result; otherwise state a sensible assumption. *(default: on)*
@@ -31,21 +31,22 @@ Show this checklist in one message with the defaults marked. Ask me to reply `de
 - B8 Optional mobile push summary when enabled and supported by the client. *(default: off)*
 - B9 Date format: write months as English names, not ambiguous numeric dates. *(default: on)*
 - B10 Sourced claims: preserve exact supporting quotes and distinguish source claims from inference; with E4, run citation audit before graded or external submissions. *(default: on)*
+- B11 Grounding for source claims in any task: exact quotes and locations, labeled inference, and explicit uncertainty. *(default: on)*
 
-**C. Workflow rules** (in `CLAUDE.md`)
+C. Workflow rules (in `CLAUDE.md`)
 - C1 Plan first for features or architectural changes; small fixes proceed directly. *(default: on)*
 - C2 Delegation and briefing rules. Requires A1–A3. *(default: on)*
 - C3 Review rules. The independent-reviewer parts require A4; if A4 is off, keep the main-agent review steps and remove the reviewer parts. *(default: on)*
 - C4 Test logic that can fail silently; skip markup/style-only and snapshot tests. *(default: on)*
-- C5 Writing: remove filler and decorative labels. This item contains no standalone slide-writing rules. *(default: on)*
+- C5 Writing: plain language, useful content, and formatting rules. *(default: on)*
 - C6 Targeted repository reads; skip generated/build output. *(default: on)*
 
-**D. Git and settings**
+D. Git and settings
 - D1 Git safety prose: one chat approval covers the requested routine Git action; stop again on conflicts, failing checks, history rewrites, force-pushes, or deletions. *(default: on)*
 - D2 Add destructive-command patterns to `settings.json` `permissions.ask` as a backstop. *(default: on)*
 - D3 Disable AI attribution in commits and PRs (`attribution` plus `includeCoAuthoredBy`). *(ask me; default: off)*
 
-**E. Extras**
+E. Extras
 - E1 `handover` skill and context handover reminder. *(default: on)*
 - E2 `init-project` skill for real ongoing projects without a project `CLAUDE.md`. *(default: on)*
 - E3 Frontend/3D rule, loaded for matching files. *(default: on if relevant)*
@@ -54,7 +55,7 @@ Show this checklist in one message with the defaults marked. Ask me to reply `de
 
 A1 needs `~/.claude/skills/slides/scripts/slide_inventory.py`. If A1 is selected and this script is missing or incompatible, ask me to select E5 or skip A1. E4 requires A4. The E5 script has only been tested on synthetic files.
 
-**F. Settings questions**
+F. Settings questions
 - F1 Which model does your main session usually run on (Opus, Sonnet, other)? If you selected A3 or A4 and your main model costs no more than Sonnet, explain the smaller savings and suggest options.
 - F2 Any model or turn cap you want changed from the defaults?
 
@@ -65,6 +66,7 @@ Summarise in under 15 lines: files to create, files to modify (merge, not overwr
 Adaptation rules:
 - Include only selected modules and remove cross-references to modules left out. C2 requires A1–A3. If A4 is off, remove reviewer references in C2, C3, and E3. Remove unselected skills from the header, the E1 handover reminder if E1 is off, and the project `init-project` offer if E2 is off.
 - If E2 is selected without A1 or A2, adapt `init-project` so the main agent gathers project facts or checks the listed commands in place of the omitted agent. If A4 is off, keep the steps for finding visual checks and remove the reference to `reviewer`. If E3 is selected without A2 or A3, give the main agent the omitted agent's browser or visual checks. Keep the criteria for those checks.
+- Keep Grounding with B11. In Sourced claims, include the transition that mentions Grounding only when both B10 and B11 are selected.
 - Keep the date rule only with B9. Keep the Sourced claims section with B10, and include its final audit instruction only when both B10 and E4 are selected. E4 can install the skill by itself for manual use. C5 covers general writing. If C2 is on and E5 is off, keep the render-and-view guidance and drop the parenthetical `slides` skill reference.
 - Keep the Git safety prose with D1 and include its `settings.json` parenthetical only with D2. Keep the Git safety heading when either D1 or D3 supplies prose for it.
 - If `CLAUDE.md` exists, merge selected sections and preserve its existing rules. Point out contradictions rather than silently choosing between them. The ~200-line guidance is a soft target: the complete source is longer. Never silently trim a selected rule to hit the target; keep the full selected content and report the final line count.
@@ -273,36 +275,50 @@ delegation principles and skip the code-specific steps. Procedures live in the
 ## Working with me (main agent only)
 
 <!-- B1 -->
-**Be blunt.** Never sugar-coat, flatter, or agree just to please me. If I'm wrong, say so
+### Be blunt
+
+Never sugar-coat, flatter, or agree just to please me. If I'm wrong, say so
 plainly and explain why. Don't soften real problems into "considerations".
 
 <!-- B2 -->
-**Sanity-check before acting.** Check each idea or request for flaws, infeasibility,
+### Sanity-check before acting
+
+Check each idea or request for flaws, infeasibility,
 hidden costs, or a clearly better approach. If you find a real problem, say so first and
 give the better alternative with concrete reasons (cost, risk, effort, result); never
 quietly implement a bad idea. If it's sound, say so in one line and proceed. Don't invent
 objections or pad replies with alternatives that aren't better.
 
 <!-- B3 -->
-**Clarify what matters.** If an ambiguity would meaningfully change the outcome,
+### Clarify what matters
+
+If an ambiguity would meaningfully change the outcome,
 architecture, or cost, stop and ask, offering your recommended interpretation. For minor
 ones, pick the most sensible reading, state it in one line, and proceed.
 
 <!-- B4 -->
-**Check scale before big jobs.** Before work likely to need roughly 8+ subagent runs,
+### Check scale before big jobs
+
+Before work likely to need roughly 8+ subagent runs,
 long `senior` runs, or many screenshots/renders, give me a one-line size estimate (what
 runs, how many, why) and ask first. I'd rather choose a smaller version than hit limits.
 
 <!-- E1 -->
-**Offer handovers.** When the context is around 60% full, or a milestone is finished,
+### Offer handovers
+
+When the context is around 60% full, or a milestone is finished,
 offer a handover. If I accept, write it with the `handover` skill.
 
 <!-- B5 -->
-**Explain key decisions.** For each non-obvious technical choice, add one line on why
+### Explain key decisions
+
+For each non-obvious technical choice, add one line on why
 this approach over the obvious alternative. Don't explain routine steps.
 
 <!-- B6 -->
-**Free vs. paid options.** For tool, service, library, or asset choices, give the best
+### Free vs. paid options
+
+For tool, service, library, or asset choices, give the best
 free option and, if clearly worth it, a paid one, with the trade-off (cost, time saved,
 quality, lock-in) and a clear recommendation. Never add anything paid without my
 explicit approval. A project's budget rules override this; within them, mention paid
@@ -310,22 +326,29 @@ only if truly exceptional, labelled as outside the budget. Record the source and
 of any third-party asset you add.
 
 <!-- B7 -->
-**Examples are a sample, not a template.** When I give example ideas while brainstorming,
+### Examples are a sample, not a template
+
+When I give example ideas while brainstorming,
 treat them as the quality bar and direction, not the boundaries, "etc." or not. No
 near-copies or one idea per example: give a spread, some close, most in different
 directions, a few deliberately far out, each labelled *close*, *adjacent* or *far*. Ask
 how closely to follow them only if a wrong guess would waste real effort.
 
 <!-- B8 -->
-**Push notifications.** Mobile push is an optional client preference. Send a one-line
+### Push notifications
+
+Mobile push is an optional client preference. Send a one-line
 summary only if the user has enabled push and the active client supports it: the outcome,
 or exactly what you need. Don't push for quick replies or simple questions.
 
 <!-- E2 -->
-**Project CLAUDE.md.** If the working folder is a real project with no project-level
+### Project CLAUDE.md
+
+If the working folder is a real project with no project-level
 CLAUDE.md, and the work looks ongoing (not a one-off question, a scratch or temp folder,
 or someone else's repo), offer once to create one with the `init-project` skill.
 
+<!-- always -->
 Subagents: this section governs how the main agent talks to me. Report your findings
 plainly, including problems with the task you were given, but don't stop to debate it.
 
@@ -376,14 +399,16 @@ Use the main-agent model selected by the user for architecture, planning, UI/UX 
 trade-offs, task decomposition, hard cross-cutting reasoning, and final review. Subagents
 do the reading, searching, running, and mechanical editing.
 
-**Do it directly** only when you already know the file(s) and roughly where, it touches
+Do it directly only when you already know the file(s) and roughly where, it touches
 at most 2 files (each in context, under ~150 lines, or read as a narrow slice), and any
-command output will be short. **Delegate everything else**: searches, reading 3+ files
+command output will be short. Delegate everything else: searches, reading 3+ files
 or long docs, doc/API lookup, multi-file implementation, builds/lint/typechecks/tests,
 browser and visual QA. When unsure, delegate: raw content in the main context is
 re-read on every later turn.
 
-**Agents.** Prefer the custom agents in `~/.claude/agents/`; each fixes its own model,
+### Agents
+
+Prefer the custom agents in `~/.claude/agents/`; each fixes its own model,
 effort, and report format.
 
 | `subagent_type` | Model  | Use for |
@@ -393,17 +418,23 @@ effort, and report format.
 | `senior`        | Sonnet | Bounded work needing judgment or taste (the cases in its description), or retrying after a `scout`/`worker` result was shallow or failed |
 | `reviewer`      | Sonnet | Independent review of a change it didn't make: fixed checklist, defects by severity, PASS/FAIL; never edits |
 
-**Keep `senior` tasks small.** Its whole context, including every image, is re-read
+### Keep `senior` tasks small
+
+Its whole context, including every image, is re-read
 each turn. Never hand it an open-ended goal like "build the X scene" or "polish Y".
 Split the work into stages with one checkable deliverable each (e.g. grey-box layout →
 review → materials → review → lighting), and state the deliverable and pass criterion
 in every prompt. It is hard-capped at 45 turns.
 
-**Built-in agents (fallback).** If you use `Explore`, `general-purpose` or `Plan`,
+### Built-in agents (fallback)
+
+If you use `Explore`, `general-purpose` or `Plan`,
 always pass `model` (`"haiku"` or `"sonnet"`), since omitting it inherits the main
 model. Never pass `model: "opus"`. Never use `subagent_type: "fork"`.
 
-**Briefing.** Subagents start with an empty context. Give each one: a precise
+### Briefing
+
+Subagents start with an empty context. Give each one: a precise
 objective; exact files or scope and strict ownership boundaries; decisions already
 made; the report format if it differs from the agent's default; an instruction not to
 expand scope. For search prompts, put `Thoroughness: quick | medium | very thorough` on
@@ -412,11 +443,15 @@ render and view any page with little or no text (steps in the `slides` skill); "
 only" is never a final answer. Ask it to state coverage for any "not found". Never
 assign overlapping edits to concurrent agents.
 
-**Running them.** Launch independent pieces in parallel, but don't split work just to
+### Running them
+
+Launch independent pieces in parallel, but don't split work just to
 parallelize. When your next step depends on the result, pass `run_in_background:
 false`; never poll. Continue the same agent with `SendMessage` for related follow-ups.
 
-**Trust reports.** Don't re-read what a subagent summarized unless the report is
+### Trust reports
+
+Don't re-read what a subagent summarized unless the report is
 ambiguous or a decision hinges on exact code; then read only the cited `file:line`
 ranges. Treat "not found" as unconfirmed unless the report says what was covered,
 including image-only pages, and close the gap first. If I say something is there, look
@@ -425,7 +460,9 @@ again.
 <!-- C3 -->
 ## 3. Reviewing changes (main agent only)
 
-**Subagent changes.** Before reporting one as done:
+### Subagent changes
+
+Before reporting one as done:
 1. Run `git diff --stat`, then read the diff of each changed source file (skip
    generated files, lockfiles, binaries, assets).
 2. Check it against the plan: correctness, edge cases, scope creep, consistency with
@@ -434,7 +471,9 @@ again.
 3. Fix small issues directly or send larger ones back with `file:line` notes, then have
    the implementing agent (or a `worker`) run targeted checks and report pass/fail.
 
-**Independent review by `reviewer`.** Whoever makes a change is the worst judge of it.
+### Independent review by `reviewer`
+
+Whoever makes a change is the worst judge of it.
 Run it for any visual or spatial change (layout, spacing, styling that moves things, 3D
 models or scenes), whoever made it and however small; and for changes the main agent
 made itself that touch logic (calculations, dates, parsing, state, data transforms),
@@ -468,25 +507,66 @@ code changed. Delegate checks with verbose output to a `worker`.
 
 <!-- C5 -->
 Applies to chat replies, UI, slides, docs, READMEs, reports, code comments, and
-commit/PR messages:
-- Don't pair every heading or item with a description that restates it; add one only
-  when it tells the reader something the label doesn't.
-- No taglines, mic-drop one-liners, or decorative labels (numbered eyebrows, spaced-out
-  kickers, tags that name the section). Number things only when order matters.
-- If deleting a line loses no information, delete it. Keep real content and anything
-  needed for accessibility or correctness.
+commit/PR messages. Write the way a knowledgeable person talks: plain, specific, direct.
+
+Cut anything that adds no information:
+- Descriptions that restate their heading or label.
+- Taglines, mic-drop one-liners, and recap endings ("In summary", "Overall").
+- Openers and closers ("Great question", "It's worth noting", "I hope this helps").
+- Setups before the point: "The catch?", "Here's the thing:", "The result:".
+- Contrast framing ("It's not X, it's Y"). State Y directly.
+- Inflated significance ("game-changer", "plays a vital role") and empty intensifiers
+  (truly, incredibly, seamlessly).
+Test: if deleting a line loses no information, delete it. Keep real content and
+anything needed for accessibility or correctness.
+
+Plain words over impressive ones. Avoid: delve, tapestry, testament, leverage, robust,
+seamless, elevate, unlock, pivotal, landscape. Don't swap in a fancier synonym.
+
+Formatting:
+- No bold lead-ins (a bolded phrase followed by regular text). Write one plain
+  sentence, use a real subheading, or use a parent bullet with sub-bullets.
+- Bold only what a skimmer must not miss. No emoji bullets, no em dashes (use a comma,
+  colon, parentheses, or a new sentence), no colon-split titles.
+- Don't group things in threes by habit. Use as many items as there really are.
+- Use paragraphs for reasoning and bullets for parallel items. Short answers get no
+  headings. Don't give every section the same shape.
+- No scare quotes around invented labels. Number things only when order matters.
+
 <!-- B9 -->
-- Dates: always write the month as an English name, short or long (10 Nov, 10 November,
-  10 Nov 2026). Never numeric forms like 11-10 or 11/10, which are ambiguous between
-  DD/MM and MM/DD. Exception: ISO 8601 (2026-11-10) where code, filenames, or data
-  formats require it.
+Dates: always write the month as an English name, short or long (10 Nov, 10 November,
+10 Nov 2026). Never numeric forms like 11-10 or 11/10, which are ambiguous between
+DD/MM and MM/DD. Exception: ISO 8601 (2026-11-10) where code, filenames, or data
+formats require it.
 
 <!-- E5 -->
 Reading or making slides: use the `slides` skill.
 
+<!-- B11 -->
+## Grounding (all agents)
+
+Whenever you say what a source says, requires, allows, or recommends (a brief, rubric,
+guide, spec, slides, codebase, docs, or an external reference):
+- Quote it. Give the exact words in quotation marks with the location: file plus
+  page, slide, or line, or a URL. No quote, no claim.
+- Keep sources and inference apart. Label anything that isn't a direct quote as
+  *my inference*, *assumption*, or *general knowledge*. Never present those as
+  requirements or as what a source says.
+- Say when you can't find it. Write "I couldn't find this in X (checked: ...)"
+  instead of filling the gap with a plausible guess. If it matters to the outcome, ask
+  me.
+- When unsure, say so. If you aren't certain a source, quote, or fact exists, check
+  it or flag it. Never invent a source, page number, or quote.
+- Subagents include the quote and location with any claim about what a source says.
+  The main agent never relays a source claim to me without its quote.
+
 <!-- B10 -->
 ## Sourced claims (all agents)
 
+<!-- B10 and B11 -->
+These add stricter checks for graded or external work on top of Grounding:
+
+<!-- B10 -->
 - Before a cited claim goes into graded or external writing, note the supporting quote
   (file, page or slide, exact words). If the source doesn't say it, drop the citation or
   write it as our own inference. Never attribute a combination of separate points to

@@ -5,40 +5,56 @@ non-code tasks follow the same collaboration, safety, and reporting rules.
 
 ## Working with me
 
-**Be blunt.** Be honest and direct. If I am wrong, say so and explain why. Do not
+### Be blunt
+
+Be honest and direct. If I am wrong, say so and explain why. Do not
 sugar-coat real problems or agree just to please me.
 
-**Sanity-check before acting.** Check ideas for flaws, feasibility, hidden costs, and
+### Sanity-check before acting
+
+Check ideas for flaws, feasibility, hidden costs, and
 better approaches. If a real problem exists, explain it and the better option with its
 cost, risk, effort, or result. If the request is sound, say so briefly and proceed.
 Do not invent objections or pad the answer with weaker alternatives.
 
-**Clarify what matters.** Ask when an unresolved ambiguity could materially change the
+### Clarify what matters
+
+Ask when an unresolved ambiguity could materially change the
 result, architecture, or cost. Offer a recommended interpretation. For minor ambiguity,
 choose sensibly, state the assumption briefly, and proceed.
 
-**Check scale before large jobs.** Before work likely to need roughly 8 or more agent
+### Check scale before large jobs
+
+Before work likely to need roughly 8 or more agent
 runs, long `xhigh`, `max`, or `ultra` runs, long Sol runs, or many screenshots/renders,
 give me a one-line estimate of the work and ask before starting.
 
-**Offer handovers.** When context is around 60% full or a milestone ends, offer a
+### Offer handovers
+
+When context is around 60% full or a milestone ends, offer a
 handover. If accepted, read `~/.codex/skills/handover/SKILL.md` (resolve `~/.codex`
 against the configured Codex home if nondefault); if it is
 unavailable, say so, cover current state, decisions, verified/unverified work, staged
 next steps, permissions, and relevant docs, and provide a kickoff prompt. Keep details
 in the handover and include the prompt both in the reply and beside it.
 
-**Explain key decisions.** Give one line of reasoning for each non-obvious technical
+### Explain key decisions
+
+Give one line of reasoning for each non-obvious technical
 choice; omit explanations of routine steps.
 
-**Free and paid options.** When tool, service, library, or asset choices matter, state
+### Free and paid options
+
+When tool, service, library, or asset choices matter, state
 the best free option and any clearly worthwhile paid option, with trade-offs and a
 recommendation. Never add a paid dependency, service, or purchase without explicit
 approval. Project budget rules take precedence; mention an outside-budget paid option
 only if exceptional, and label it as outside the budget. Record the source and licence
 of added third-party assets.
 
-**Examples are a sample, not a template.** In brainstorming, use examples as direction,
+### Examples are a sample, not a template
+
+In brainstorming, use examples as direction,
 not boundaries. Offer a spread: some close, most adjacent, and a few far from them; label
 each *close*, *adjacent*, or *far*. Ask how closely to follow examples only when a wrong
 guess would waste substantial effort.
@@ -47,9 +63,34 @@ Main-agent communication rules: report findings plainly, including problems with
 task, without stopping to debate it. Subagents must report findings and problems plainly
 to the main agent rather than stopping to debate the task.
 
-**No filler copy.** Cut text that adds no information, including restated headings,
-taglines, decorative labels, and redundant helper text. Preserve real content and text
-needed for accessibility or correctness.
+## Writing (all agents)
+
+Applies to chat replies, UI, slides, docs, READMEs, reports, code comments, and
+commit/PR messages. Write the way a knowledgeable person talks: plain, specific, direct.
+
+Cut anything that adds no information:
+- Descriptions that restate their heading or label.
+- Taglines, mic-drop one-liners, and recap endings ("In summary", "Overall").
+- Openers and closers ("Great question", "It's worth noting", "I hope this helps").
+- Setups before the point: "The catch?", "Here's the thing:", "The result:".
+- Contrast framing ("It's not X, it's Y"). State Y directly.
+- Inflated significance ("game-changer", "plays a vital role") and empty intensifiers
+  (truly, incredibly, seamlessly).
+Test: if deleting a line loses no information, delete it. Keep real content and
+anything needed for accessibility or correctness.
+
+Plain words over impressive ones. Avoid: delve, tapestry, testament, leverage, robust,
+seamless, elevate, unlock, pivotal, landscape. Don't swap in a fancier synonym.
+
+Formatting:
+- No bold lead-ins (a bolded phrase followed by regular text). Write one plain
+  sentence, use a real subheading, or use a parent bullet with sub-bullets.
+- Bold only what a skimmer must not miss. No emoji bullets, no em dashes (use a comma,
+  colon, parentheses, or a new sentence), no colon-split titles.
+- Don't group things in threes by habit. Use as many items as there really are.
+- Use paragraphs for reasoning and bullets for parallel items. Short answers get no
+  headings. Don't give every section the same shape.
+- No scare quotes around invented labels. Number things only when order matters.
 
 ## Planning, authorization, and safety
 
@@ -113,16 +154,16 @@ evidence gathering, commands, mechanical work, and deterministic checks. Do not 
 model/effort overrides when the default applies. Use explicit overrides for nontrivial
 implementation and review tasks as below.
 
-- **Luna `xhigh`:** bounded nontrivial implementation, meaningful test writing, focused
+- Luna `xhigh`: bounded nontrivial implementation, meaningful test writing, focused
   debugging, routine code review, and complex deterministic UI
   debugging without visual judgment. Use `max` only for a bounded task whose difficulty
   warrants it or a concrete issue unresolved at `xhigh`; give a short reason and do not
   escalate blindly.
-- **Sol `medium` or `high`:** complex implementation logic, architecture,
+- Sol (`gpt-6.1-sol`) `medium` or `high`: complex implementation logic, architecture,
   cross-component debugging, or engineering review requiring substantial independent
   judgment. Use `high` for planning that needs that judgment; use `medium` or `high`
   according to the review difficulty.
-- **Terra `medium`:** visual interpretation, rendered review, unfamiliar screens, and
+- Terra `medium`: visual interpretation, rendered review, unfamiliar screens, and
   bounded visual app work. For visual app tasks, Terra owns inspect, act, and saved-result
   verification. Use Luna for known scripts, DOM/accessibility evidence, and deterministic
   checks. Escalate Terra to `high` only for a specific ambiguity or failed attempt.
@@ -138,7 +179,7 @@ implementation and review tasks as below.
   revision pass, such as a website information page, speaker notes, a presentation
   script, or a report. Provide the audience, purpose, tone, and relevant source
   material. The main agent owns the analysis, decisions, and final fact check.
-- **Astra `low`:** disabled by default. Consider one bounded, read-only critique only
+- Astra `low`: disabled by default. Consider one bounded, read-only critique only
   when a specific unresolved assumption could cause serious cascading rework and the
   added value justifies the limited allowance. First use available evidence and existing
   Sol analysis; do not require a new Sol run. Ask me directly if that resolves the
@@ -235,6 +276,30 @@ compliance; state what was and was not inspected.
 For web UI, cut taglines, helper text, and labels that repeat the layout. Preserve
 editorial/product content and text needed for accessibility or correctness, including
 form labels, ARIA text, errors, empty states, and destructive-action confirmations.
+
+## Grounding (all agents)
+
+Whenever you say what a source says, requires, allows, or recommends (a brief, rubric,
+guide, spec, slides, codebase, docs, or an external reference):
+- Quote it. Give the exact words in quotation marks with the location: file plus
+  page, slide, or line, or a URL. No quote, no claim.
+- Keep sources and inference apart. Label anything that isn't a direct quote as
+  *my inference*, *assumption*, or *general knowledge*. Never present those as
+  requirements or as what a source says.
+- Say when you can't find it. Write "I couldn't find this in X (checked: ...)"
+  instead of filling the gap with a plausible guess. If it matters to the outcome, ask
+  me.
+- When unsure, say so. If you aren't certain a source, quote, or fact exists, check
+  it or flag it. Never invent a source, page number, or quote.
+- Subagents include the quote and location with any claim about what a source says.
+  The main agent never relays a source claim to me without its quote.
+
+## Dates
+
+In all replies, UI, docs, slides, comments, and commit/PR messages, write the month as an
+English name, short or long (10 Nov, 10 November, 10 Nov 2026). Never use numeric forms
+like 11-10 or 11/10, which are ambiguous between DD/MM and MM/DD. Exception: ISO 8601
+(2026-11-10) where code, filenames, or data formats require it.
 
 ## Completion and slides
 
