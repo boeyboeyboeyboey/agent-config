@@ -11,7 +11,9 @@ Personal instructions and skills for [Codex](codex/AGENTS.md) and [Claude Code](
 - Ground source claims in exact quotes and locations. Label inference and state gaps. [Codex rules](codex/AGENTS.md#grounding-all-agents) · [Claude rules](claude/CLAUDE.md#grounding-all-agents)
 - Write plainly and cut filler. Keep one point per slide, with explanations in speaker notes. [Codex writing](codex/AGENTS.md#writing-all-agents) · [Claude writing](claude/CLAUDE.md#5-writing-all-agents)
 
-## Model routing
+## Codex
+
+### Model routing
 
 | Work | Model |
 | --- | --- |
@@ -19,26 +21,30 @@ Personal instructions and skills for [Codex](codex/AGENTS.md) and [Claude Code](
 | Visual work, app tasks, and longer drafts | Terra |
 | Complex engineering | Sol |
 | Exceptional read-only critique | Astra, with approval |
-| Claude scouting and execution | Haiku at medium effort |
-| Claude senior work and review | Sonnet at high effort |
 
-The Claude main model is selected in Claude. This setup uses Claude Pro, with no extra paid usage.
+The setup includes a [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules), [skills](codex/skills/), and [rule checks and gaps](verification/git-policy-cases.json).
 
-## Setup files
+## Claude Code
 
-- Codex includes a [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules), [skills](codex/skills/), and [rule checks and gaps](verification/git-policy-cases.json).
-- Claude includes a [paste-in install prompt](claude/install-prompt.md), [agents](claude/agents/), a [frontend rule](claude/rules/frontend.md), and a [settings example](claude/settings.example.json).
+### Model routing
+
+| Work | Model |
+| --- | --- |
+| Scouting and execution | Haiku at medium effort |
+| Senior work and review | Sonnet at high effort |
+
+The main model is selected in Claude. This setup uses Claude Pro, with no extra paid usage.
+
+The setup includes a [paste-in install prompt](claude/install-prompt.md), [agents](claude/agents/), a [frontend rule](claude/rules/frontend.md), and a [settings example](claude/settings.example.json).
 
 One chat approval per routine Git action, with settings prompts for selected destructive commands. A trailing force flag, as in `git push origin main --force`, slips past those patterns and relies on the [prose rule](claude/CLAUDE.md#git-safety-all-agents).
 
-## Claude skills
+### Skills
 
-| Skill | Purpose |
-| --- | --- |
-| [handover](claude/skills/handover/SKILL.md) | Save the current state, checks, next steps, and a kickoff prompt. |
-| [init-project](claude/skills/init-project/SKILL.md) | Draft a project `CLAUDE.md` with checked commands and conventions, then show it for approval. |
-| [citation-audit](claude/skills/citation-audit/SKILL.md) | Match cited claims to source passages before graded or external submission. |
-| [slides](claude/skills/slides/SKILL.md) | Write slides and review visual content in decks and PDFs. |
+- [handover](claude/skills/handover/SKILL.md): Save the current state, checks, next steps, and a kickoff prompt.
+- [init-project](claude/skills/init-project/SKILL.md): Draft a project `CLAUDE.md` with checked commands and conventions, then show it for approval.
+- [citation-audit](claude/skills/citation-audit/SKILL.md): Match cited claims to source passages before graded or external submission.
+- [slides](claude/skills/slides/SKILL.md): Write slides and review visual content in decks and PDFs.
 
 Slide review covers every page in decks of 15 pages or fewer. For longer decks, start with the inventory and check additional pages where visuals matter. Uses `python-pptx` and `pdfplumber`, LibreOffice for PowerPoint rendering, and Keynote on macOS for `.key` exports.
 
