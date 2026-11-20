@@ -1,38 +1,45 @@
 # Agent config
 
-Personal [Codex](codex/AGENTS.md) and [Claude Code](claude/CLAUDE.md) setup. [Model choices, benchmarks, and limits](docs/model-routing.md).
+Personal instructions and skills for [Codex](codex/AGENTS.md) and [Claude Code](claude/CLAUDE.md). [Model choices, benchmarks, and limits](docs/model-routing.md).
 
-- Working with me, blunt feedback, challenge bad ideas, clarify ambiguity, explain decisions, cut filler.
+## Workflow
 
-- Planning and safety, approval before bigger changes, scoped edits, preserve existing work, explicit Git permissions.
+- Give direct feedback, question weak ideas, and clarify ambiguity that affects the outcome.
+- Plan larger changes before editing. Keep changes scoped, preserve existing work, and get permission for Git actions.
+- Delegate bounded tasks with clear ownership. Keep decisions and final review with the main agent.
+- Review delegated changes, use independent review for logic and visual work, and match checks to the risk. Report anything left unchecked.
+- Ground source claims in exact quotes and locations. Label inference and state gaps. [Codex rules](codex/AGENTS.md#grounding-all-agents) · [Claude rules](claude/CLAUDE.md#grounding-all-agents)
+- Write plainly and cut filler. Keep one point per slide, with explanations in speaker notes. [Codex writing](codex/AGENTS.md#writing-all-agents) · [Claude writing](claude/CLAUDE.md#5-writing-all-agents)
 
-- Delegation, keep the main chat focused, bounded subagent tasks, clear file ownership, small checks handled directly.
+## Model routing
 
-- Codex routing, Luna for routine work, Terra for visual work, app tasks, and longer drafts, Sol for complex engineering, Astra approval-only.
+| Work | Model |
+| --- | --- |
+| Routine Codex tasks | Luna |
+| Visual work, app tasks, and longer drafts | Terra |
+| Complex engineering | Sol |
+| Exceptional read-only critique | Astra, with approval |
+| Claude scouting and execution | Haiku at medium effort |
+| Claude senior work and review | Sonnet at high effort |
 
-- Claude routing, Haiku/medium for scout and worker, Sonnet/high for senior and reviewer. Main model selected in Claude. Pro budget, no extra paid usage.
+The Claude main model is selected in Claude. This setup uses Claude Pro, with no extra paid usage.
 
-- Review, main agent checks delegated diffs, independent review for logic and visual changes, fix material findings.
+## Setup files
 
-- Verification, targeted searches, checks matched to risk, tests for logic that can break silently, unchecked areas called out.
+- Codex includes a [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules), [skills](codex/skills/), and [rule checks and gaps](verification/git-policy-cases.json).
+- Claude includes a [paste-in install prompt](claude/install-prompt.md), [agents](claude/agents/), a [frontend rule](claude/rules/frontend.md), and a [settings example](claude/settings.example.json).
 
-- Grounding, “No quote, no claim.” Exact excerpts and locations, labeled inference, explicit gaps. [Codex](codex/AGENTS.md#grounding-all-agents) · [Claude](claude/CLAUDE.md#grounding-all-agents)
-
-- Writing, “plain, specific, direct.” Cut filler, use plain words, keep formatting restrained. [Codex](codex/AGENTS.md#writing-all-agents) · [Claude](claude/CLAUDE.md#5-writing-all-agents)
-
-- Completion, stop when verified, report uncertainty. Codex slide rules, one point per slide, explanations in speaker notes.
-
-Codex files: [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules), [skills](codex/skills/), [rule checks and gaps](verification/git-policy-cases.json).
-
-Claude files: [install prompt](claude/install-prompt.md), [agents](claude/agents/), [frontend rule](claude/rules/frontend.md), [settings example](claude/settings.example.json).
-
-- Claude Git, one chat approval per routine action. The settings example prompts for selected destructive commands. `git push origin main --force` falls outside those patterns and is covered by the prose rule. [Git safety](claude/CLAUDE.md#git-safety-all-agents)
+One chat approval per routine Git action, with settings prompts for selected destructive commands. A trailing force flag, as in `git push origin main --force`, slips past those patterns and relies on the [prose rule](claude/CLAUDE.md#git-safety-all-agents).
 
 ## Claude skills
 
-- [handover](claude/skills/handover/SKILL.md), current state, checks, next steps, and a kickoff prompt for a fresh chat.
-- [init-project](claude/skills/init-project/SKILL.md), project `CLAUDE.md` with checked commands and repo conventions, shown for approval before saving.
-- [citation-audit](claude/skills/citation-audit/SKILL.md), match cited claims to exact source passages before graded or external submission.
-- [slides](claude/skills/slides/SKILL.md), write slides and review decks or PDFs. View every page for decks of 15 pages or fewer. For longer decks, use the inventory plus visual checks where the task depends on charts, diagrams, or layouts. Uses `python-pptx` and `pdfplumber`, LibreOffice for PowerPoint rendering, and Keynote on macOS for `.key` exports.
+| Skill | Purpose |
+| --- | --- |
+| [handover](claude/skills/handover/SKILL.md) | Save the current state, checks, next steps, and a kickoff prompt. |
+| [init-project](claude/skills/init-project/SKILL.md) | Draft a project `CLAUDE.md` with checked commands and conventions, then show it for approval. |
+| [citation-audit](claude/skills/citation-audit/SKILL.md) | Match cited claims to source passages before graded or external submission. |
+| [slides](claude/skills/slides/SKILL.md) | Write slides and review visual content in decks and PDFs. |
+
+Slide review covers every page in decks of 15 pages or fewer. For longer decks, start with the inventory and check additional pages where visuals matter. Uses `python-pptx` and `pdfplumber`, LibreOffice for PowerPoint rendering, and Keynote on macOS for `.key` exports.
 
 [MIT license](LICENSE).
