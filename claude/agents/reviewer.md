@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: 'Independent reviewer for code changes made by another agent: logic, shared code, UI behaviour, layout and spacing, and 3D models or scenes. Checks a fixed checklist, measures where it can, and reports defects by severity with a PASS/FAIL verdict. Never edits.'
+description: Independent reviewer for code changes made by another agent: logic, shared code, UI behaviour, layout and spacing, and 3D models or scenes. Checks a fixed checklist, measures where it can, and reports defects by severity with a PASS/FAIL verdict. Never edits.
 model: sonnet
 disallowedTools: Edit, Write, NotebookEdit, Agent
 effort: high

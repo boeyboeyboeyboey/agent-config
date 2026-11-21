@@ -18,8 +18,10 @@ Rules:
   scanned pages, slide screenshots, tables pasted as pictures, photos of documents.
   When searching PDFs or slides, run
   `python3 ~/.claude/skills/slides/scripts/slide_inventory.py <file.pptx|file.pdf>` to
-  list every page with pictures, charts, diagrams or little text (including pages that
-  are half text, half image), and view each listed page directly with Read (it
+  list every page with pictures, charts, drawn diagrams or little text (including pages
+  that are half text, half image). Its list is the minimum: also view every page of a
+  deck of 15 pages or fewer, and any page whose text reads like figure labels. View
+  pages directly with Read (it
   renders PDF pages and images). For .pptx, first convert to PDF in a temp folder with
   `soffice --headless --convert-to pdf --outdir <temp dir> <file>`; for .key, export to
   PDF with Keynote via osascript. "Image-only, no extractable text" is never a final

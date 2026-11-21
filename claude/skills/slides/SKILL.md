@@ -15,11 +15,16 @@ answer. It is the signal to render the page and look at it.
    - `.key`: export to PDF first (step 3), then treat it as a PDF.
 2. Find every page with visual content by running
    `python3 ~/.claude/skills/slides/scripts/slide_inventory.py <file.pptx|file.pdf>`.
-   It marks a page VIEW if it has little text, any picture over 3% of the page, a chart,
-   a diagram or SmartArt, or heavy vector drawing, including pages that are half text and
-   half image. It ignores logos and backgrounds that repeat on most pages. View every
-   page it marks VIEW; the text layer alone doesn't cover them. If the script fails, view
-   every page that has any picture or chart.
+   It marks a page VIEW if it has little text, a picture over 3% of the page, a chart,
+   SmartArt or an embedded object, or more drawn shapes or lines than the deck usually
+   has (shape diagrams, flowcharts), including pages that are half text and half image.
+   It ignores images whose content repeats on most pages (logos, backgrounds).
+   Its list is the minimum you must view, not a guarantee. Also view:
+   - every page, when the deck is 15 pages or fewer (the script says so);
+   - any page whose extracted text reads like parts of a figure: short scattered labels,
+     "as shown", "see diagram", arrows, axis or legend words;
+   - any page where the task depends on visuals (diagrams, charts, layouts).
+   If the script fails, view every page that has any picture, chart or drawing.
 3. Render and view those pages.
    - `.pdf`: open it with Read and the `pages` parameter (up to 20 pages per call).
    - `.pptx`: `soffice --headless --convert-to pdf --outdir <scratch dir> <file>`, then

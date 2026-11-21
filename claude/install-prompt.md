@@ -14,38 +14,37 @@ Inspect whether these exist and what they contain: `~/.claude/CLAUDE.md`, `~/.cl
 
 Show this checklist in one message with the defaults marked. Ask me to reply `defaults` or list changes. If your client has a multiple-choice tool, use it in several rounds. If I choose an item with an unmet dependency, ask me to resolve that conflict before the plan; do not silently add modules.
 
-**A. Agents** (files in `~/.claude/agents/`)
+A. Agents (files in `~/.claude/agents/`)
 - A1 `scout`: Haiku, read-only search, reading, and summarising. *(default: on; uses the slide inventory script from E5 or an existing compatible copy)*
 - A2 `worker`: Haiku, executes tasks from a precise spec and runs checks. *(default: on)*
 - A3 `senior`: Sonnet, bounded work needing judgment (UI polish, debugging, tricky multi-file changes); capped at 45 turns. *(default: on)*
 - A4 `reviewer`: Sonnet, independent fixed-checklist reviewer; reports blockers, majors, minors, PASS/FAIL, and never edits. *(default: on)*
 
-**B. Working-style rules** (in `CLAUDE.md`)
+B. Working-style rules (in `CLAUDE.md`)
 - B1 Blunt feedback: no flattery; say plainly when I'm wrong. *(default: on)*
 - B2 Sanity-check requests and surface a better approach when there is a real problem. *(default: on)*
-- B3 Ask only about ambiguities that materially change the result; otherwise state a sensible assumption. *(default: on)*
-- B4 Estimate and ask before large jobs (~8+ subagent runs, long senior runs, or many renders). *(default: on)*
-- B5 Give one-line reasons for non-obvious technical choices. *(default: on)*
-- B6 Prefer free options; describe worthwhile paid options and never add paid items without approval. *(default: on)*
-- B7 Treat brainstorming examples as direction, not boundaries; label ideas close, adjacent, or far. *(default: on)*
-- B8 Optional mobile push summary when enabled and supported by the client. *(default: off)*
-- B9 Date format: write months as English names, not ambiguous numeric dates. *(default: on)*
-- B10 Sourced claims: preserve exact supporting quotes and distinguish source claims from inference; with E4, run citation audit before graded or external submissions. *(default: on)*
+- B3 Estimate and ask before large jobs (~8+ subagent runs, long senior runs, or many renders). *(default: on)*
+- B4 Give one-line reasons for non-obvious technical choices. *(default: on)*
+- B5 Prefer free options; describe worthwhile paid options and never add paid items without approval. *(default: on)*
+- B6 Treat brainstorming examples as direction, not boundaries; label ideas close, adjacent, or far. *(default: on)*
+- B7 Mobile push summary after real work or when blocked. Needs a client that supports push. *(default: off)*
+- B8 Date format: write months as English names, not ambiguous numeric dates. *(default: on)*
+- B9 Grounding: exact quotes and locations for source claims, labelled inference, explicit gaps, plus stricter rules for graded or external work. With E4, run citation audit before those submissions. *(default: on)*
 
-**C. Workflow rules** (in `CLAUDE.md`)
-- C1 Plan first for features or architectural changes; small fixes proceed directly. *(default: on)*
+C. Workflow rules (in `CLAUDE.md`)
+- C1 Plan first for features or architectural changes; small fixes proceed directly. Ask about ambiguity only when it would change the outcome, with a recommended reading; no out-of-scope refactors. *(default: on)*
 - C2 Delegation and briefing rules. Requires A1–A3. *(default: on)*
 - C3 Review rules. The independent-reviewer parts require A4; if A4 is off, keep the main-agent review steps and remove the reviewer parts. *(default: on)*
 - C4 Test logic that can fail silently; skip markup/style-only and snapshot tests. *(default: on)*
-- C5 Writing: remove filler and decorative labels. This item contains no standalone slide-writing rules. *(default: on)*
+- C5 Writing: plain language, useful content, and formatting rules. *(default: on)*
 - C6 Targeted repository reads; skip generated/build output. *(default: on)*
 
-**D. Git and settings**
+D. Git and settings (the secrets rule is always included)
 - D1 Git safety prose: one chat approval covers the requested routine Git action; stop again on conflicts, failing checks, history rewrites, force-pushes, or deletions. *(default: on)*
 - D2 Add destructive-command patterns to `settings.json` `permissions.ask` as a backstop. *(default: on)*
 - D3 Disable AI attribution in commits and PRs (`attribution` plus `includeCoAuthoredBy`). *(ask me; default: off)*
 
-**E. Extras**
+E. Extras
 - E1 `handover` skill and context handover reminder. *(default: on)*
 - E2 `init-project` skill for real ongoing projects without a project `CLAUDE.md`. *(default: on)*
 - E3 Frontend/3D rule, loaded for matching files. *(default: on if relevant)*
@@ -54,7 +53,7 @@ Show this checklist in one message with the defaults marked. Ask me to reply `de
 
 A1 needs `~/.claude/skills/slides/scripts/slide_inventory.py`. If A1 is selected and this script is missing or incompatible, ask me to select E5 or skip A1. E4 requires A4. The E5 script has only been tested on synthetic files.
 
-**F. Settings questions**
+F. Settings questions
 - F1 Which model does your main session usually run on (Opus, Sonnet, other)? If you selected A3 or A4 and your main model costs no more than Sonnet, explain the smaller savings and suggest options.
 - F2 Any model or turn cap you want changed from the defaults?
 
@@ -65,13 +64,14 @@ Summarise in under 15 lines: files to create, files to modify (merge, not overwr
 Adaptation rules:
 - Include only selected modules and remove cross-references to modules left out. C2 requires A1–A3. If A4 is off, remove reviewer references in C2, C3, and E3. Remove unselected skills from the header, the E1 handover reminder if E1 is off, and the project `init-project` offer if E2 is off.
 - If E2 is selected without A1 or A2, adapt `init-project` so the main agent gathers project facts or checks the listed commands in place of the omitted agent. If A4 is off, keep the steps for finding visual checks and remove the reference to `reviewer`. If E3 is selected without A2 or A3, give the main agent the omitted agent's browser or visual checks. Keep the criteria for those checks.
-- Keep the date rule only with B9. Keep the Sourced claims section with B10, and include its final audit instruction only when both B10 and E4 are selected. E4 can install the skill by itself for manual use. C5 covers general writing. If C2 is on and E5 is off, keep the render-and-view guidance and drop the parenthetical `slides` skill reference.
-- Keep the Git safety prose with D1 and include its `settings.json` parenthetical only with D2. Keep the Git safety heading when either D1 or D3 supplies prose for it.
+- Keep Grounding with B9. Include its final `citation-audit` line only when E4 is also selected.
+- Keep the date rule only with B8. E4 can install the skill by itself for manual use. C5 covers general writing. If C2 is on and E5 is off, keep the render-and-view guidance and drop the parenthetical `slides` skill reference.
+- Keep the Git prose with D1 and include its `settings.json` parenthetical only with D2. The "Git and secrets" heading and the secrets paragraph are always included.
 - If `CLAUDE.md` exists, merge selected sections and preserve its existing rules. Point out contradictions rather than silently choosing between them. The ~200-line guidance is a soft target: the complete source is longer. Never silently trim a selected rule to hit the target; keep the full selected content and report the final line count.
 - If an agent with the same name exists, ask whether to replace it or skip that agent before presenting the plan.
 - In `settings.json`, preserve all existing keys and permissions. For D2, add only the `permissions.ask` strings from the source block, deduplicating exact entries. For D3, select only `attribution` and `includeCoAuthoredBy` from that same full example JSON block; preserve unrelated existing values and merge safely.
 - After I approve the plan, back up every existing selected path that will be changed to `~/.claude/backup-<YYYY-MM-DD>/` before editing, preserving relative paths. If that folder exists, use `backup-<YYYY-MM-DD>-2`, then the next unused numeric suffix. Do not back up or modify unrelated files.
-- Use the source blocks as written. The source block for scout is read-only: if it cannot convert a PPTX or Keynote file under that policy, ask the main agent to create a scratch PDF and then inspect that PDF. Never loosen scout's write restrictions. Do not silently trim selected rules or source blocks.
+- Use the source blocks with the selected adaptations above. Scout never edits project files; it may write scratch PDFs to a temp folder to inspect PowerPoint or Keynote slides.
 
 ## Step 4: Install and verify
 
@@ -108,8 +108,10 @@ Rules:
   scanned pages, slide screenshots, tables pasted as pictures, photos of documents.
   When searching PDFs or slides, run
   `python3 ~/.claude/skills/slides/scripts/slide_inventory.py <file.pptx|file.pdf>` to
-  list every page with pictures, charts, diagrams or little text (including pages that
-  are half text, half image), and view each listed page directly with Read (it
+  list every page with pictures, charts, drawn diagrams or little text (including pages
+  that are half text, half image). Its list is the minimum: also view every page of a
+  deck of 15 pages or fewer, and any page whose text reads like figure labels. View
+  pages directly with Read (it
   renders PDF pages and images). For .pptx, first convert to PDF in a temp folder with
   `soffice --headless --convert-to pdf --outdir <temp dir> <file>`; for .key, export to
   PDF with Keynote via osascript. "Image-only, no extractable text" is never a final
@@ -202,7 +204,7 @@ Report format (no intro, no recap, max ~25 lines):
 ~~~~markdown
 ---
 name: reviewer
-description: 'Independent reviewer for code changes made by another agent: logic, shared code, UI behaviour, layout and spacing, and 3D models or scenes. Checks a fixed checklist, measures where it can, and reports defects by severity with a PASS/FAIL verdict. Never edits.'
+description: Independent reviewer for code changes made by another agent: logic, shared code, UI behaviour, layout and spacing, and 3D models or scenes. Checks a fixed checklist, measures where it can, and reports defects by severity with a PASS/FAIL verdict. Never edits.
 model: sonnet
 disallowedTools: Edit, Write, NotebookEdit, Agent
 effort: high
@@ -264,76 +266,69 @@ Report (no intro, max ~25 lines):
 
 ~~~~markdown
 <!-- always -->
-# Agent Workflow
+# Agent workflow
 
 <!-- E1 E2 E3 E4 E5 -->
 These rules apply to all work, coding or not; for non-coding tasks, apply the same
 delegation principles and skip the code-specific steps. Procedures live in the
-`handover`, `init-project`, `citation-audit` and `slides` skills, `~/.claude/rules/frontend.md`, and the agent files.
+`handover`, `init-project`, `citation-audit` and `slides` skills,
+`~/.claude/rules/frontend.md`, and the agent files.
 
+<!-- always -->
 ## Working with me (main agent only)
 
 <!-- B1 -->
-**Be blunt.** Never sugar-coat, flatter, or agree just to please me. If I'm wrong, say so
-plainly and explain why. Don't soften real problems into "considerations".
-
+- Be blunt. Never sugar-coat, flatter, or agree just to please me. If I'm wrong, say so
+  plainly and explain why. Don't soften real problems into "considerations".
 <!-- B2 -->
-**Sanity-check before acting.** Check each idea or request for flaws, infeasibility,
-hidden costs, or a clearly better approach. If you find a real problem, say so first and
-give the better alternative with concrete reasons (cost, risk, effort, result); never
-quietly implement a bad idea. If it's sound, say so in one line and proceed. Don't invent
-objections or pad replies with alternatives that aren't better.
-
+- Sanity-check before acting. Check each idea or request for flaws, infeasibility,
+  hidden costs, or a clearly better approach. If you find a real problem, say so first
+  and give the better alternative with concrete reasons (cost, risk, effort, result);
+  never quietly implement a bad idea. If it's sound, say so in one line and proceed.
+  Don't invent objections or pad replies with alternatives that aren't better.
 <!-- B3 -->
-**Clarify what matters.** If an ambiguity would meaningfully change the outcome,
-architecture, or cost, stop and ask, offering your recommended interpretation. For minor
-ones, pick the most sensible reading, state it in one line, and proceed.
-
-<!-- B4 -->
-**Check scale before big jobs.** Before work likely to need roughly 8+ subagent runs,
-long `senior` runs, or many screenshots/renders, give me a one-line size estimate (what
-runs, how many, why) and ask first. I'd rather choose a smaller version than hit limits.
-
+- Check scale before big jobs. Before work likely to need roughly 8+ subagent runs,
+  long `senior` runs, or many screenshots/renders, give me a one-line size estimate
+  (what runs, how many, why) and ask first. I'd rather choose a smaller version than
+  hit limits.
 <!-- E1 -->
-**Offer handovers.** When the context is around 60% full, or a milestone is finished,
-offer a handover. If I accept, write it with the `handover` skill.
-
+- Offer handovers. When the context is around 60% full, or a milestone is finished,
+  offer a handover. If I accept, write it with the `handover` skill.
+<!-- B4 -->
+- Explain key decisions. For each non-obvious technical choice, add one line on why
+  this approach over the obvious alternative. Don't explain routine steps.
 <!-- B5 -->
-**Explain key decisions.** For each non-obvious technical choice, add one line on why
-this approach over the obvious alternative. Don't explain routine steps.
-
+- Free vs. paid options. For tool, service, library, or asset choices, give the best
+  free option and, if clearly worth it, a paid one, with the trade-off (cost, time
+  saved, quality, lock-in) and a clear recommendation. Never add anything paid without
+  my explicit approval. A project's budget rules override this; within them, mention
+  paid only if truly exceptional, labelled as outside the budget. Record the source and
+  licence of any third-party asset you add.
 <!-- B6 -->
-**Free vs. paid options.** For tool, service, library, or asset choices, give the best
-free option and, if clearly worth it, a paid one, with the trade-off (cost, time saved,
-quality, lock-in) and a clear recommendation. Never add anything paid without my
-explicit approval. A project's budget rules override this; within them, mention paid
-only if truly exceptional, labelled as outside the budget. Record the source and licence
-of any third-party asset you add.
-
+- Treat brainstorming examples as a sample. When I give example ideas, treat them as
+  the quality bar and direction, not the boundaries, "etc." or not. No near-copies or
+  one idea per example: give a spread, some close, most in different directions, a few
+  deliberately far out, each labelled *close*, *adjacent* or *far*. Ask how closely to
+  follow them only if a wrong guess would waste real effort.
 <!-- B7 -->
-**Examples are a sample, not a template.** When I give example ideas while brainstorming,
-treat them as the quality bar and direction, not the boundaries, "etc." or not. No
-near-copies or one idea per example: give a spread, some close, most in different
-directions, a few deliberately far out, each labelled *close*, *adjacent* or *far*. Ask
-how closely to follow them only if a wrong guess would waste real effort.
-
-<!-- B8 -->
-**Push notifications.** Mobile push is an optional client preference. Send a one-line
-summary only if the user has enabled push and the active client supports it: the outcome,
-or exactly what you need. Don't push for quick replies or simple questions.
-
+- Push notifications. When you finish a task that took real work (multiple steps,
+  subagents, edits, or long commands), or you're blocked on my approval or answer, send
+  a mobile push with a one-line summary: the outcome, or exactly what you need. Don't
+  push for quick replies or simple questions.
 <!-- E2 -->
-**Project CLAUDE.md.** If the working folder is a real project with no project-level
-CLAUDE.md, and the work looks ongoing (not a one-off question, a scratch or temp folder,
-or someone else's repo), offer once to create one with the `init-project` skill.
+- Project CLAUDE.md. If the working folder is a real project with no project-level
+  CLAUDE.md, and the work looks ongoing (not a one-off question, a scratch or temp
+  folder, or someone else's repo), offer once to create one with the `init-project`
+  skill.
 
+<!-- always -->
 Subagents: this section governs how the main agent talks to me. Report your findings
 plainly, including problems with the task you were given, but don't stop to debate it.
 
-<!-- D1 or D3 -->
-## Git safety (all agents)
+<!-- always -->
+## Git and secrets (all agents)
 
-<!-- D1. Include the settings parenthetical only with D2. -->
+<!-- D1. Include the settings.json parenthetical only with D2. -->
 Ask me in chat before you commit, push, pull, merge, stash, or switch branches; one yes
 covers that action, so do it without asking again. Stop and ask again if anything risky
 comes up: merge conflicts, failing tests or hooks, rewriting history, force-pushing,
@@ -342,9 +337,16 @@ reset, rebase, force-push, clean, and branch/worktree deletion). Run `git status
 your first edit in a session and preserve any existing uncommitted changes. Never edit
 files owned by teammates or outside the assigned scope; if a task seems to require it,
 stop and ask.
+
 <!-- D3 -->
 Never add AI attribution (`Co-Authored-By` trailers, "Generated with Claude Code") to
 commit messages or PR descriptions.
+
+<!-- always -->
+Never print, log, commit, or paste secrets (`.env` values, API keys, tokens, passwords)
+into chat, files, commit messages, or subagent prompts. Refer to them by name, check
+that a secret is set without reading its value, and tell me at once if one is exposed
+so I can rotate it.
 
 <!-- C6 -->
 ## Repository inspection (all agents)
@@ -354,7 +356,7 @@ reads over whole-file reads. Skip `node_modules`, build output, coverage, lockfi
 generated or minified files, and unfiltered logs unless directly relevant.
 
 <!-- C1 -->
-## 1. Planning and autonomy
+## Planning and autonomy
 
 For new features, architectural changes, or substantial modifications, first gather
 context via parallel reconnaissance subagents and produce a concise implementation
@@ -363,29 +365,33 @@ or tasks where I explicitly ask you to implement directly, proceed without a sep
 approval step.
 
 Do not invent missing requirements. Resolve ambiguity from the repository, tests,
-documentation, existing conventions, or tool output when reasonably possible. Ask me
-only when an unresolved ambiguity would materially change intended behavior or
-architecture. Prefer a sufficient actionable plan over exhaustive investigation.
+documentation, existing conventions, or tool output when reasonably possible. If an
+ambiguity would still meaningfully change the outcome, architecture, or cost, stop and
+ask, offering your recommended interpretation. For minor ones, pick the most sensible
+reading, state it in one line, and proceed. Prefer a sufficient actionable plan over
+exhaustive investigation.
 
 Do not refactor, reformat, or clean up any code outside the strict functional scope of
 your task. Leave untouched code exactly as-is.
 
 <!-- C2 -->
-## 2. Delegation (main agent only)
+## Delegation (main agent only)
 
-Use the main-agent model selected by the user for architecture, planning, UI/UX direction,
-trade-offs, task decomposition, hard cross-cutting reasoning, and final review. Subagents
-do the reading, searching, running, and mechanical editing.
+The main agent runs on the most expensive model: spend it on architecture, planning,
+UI/UX direction, trade-offs, task decomposition, hard cross-cutting reasoning, and final
+review. Subagents do the reading, searching, running, and mechanical editing.
 
-**Do it directly** only when you already know the file(s) and roughly where, it touches
+Do it directly only when you already know the file(s) and roughly where, it touches
 at most 2 files (each in context, under ~150 lines, or read as a narrow slice), and any
-command output will be short. **Delegate everything else**: searches, reading 3+ files
+command output will be short. Delegate everything else: searches, reading 3+ files
 or long docs, doc/API lookup, multi-file implementation, builds/lint/typechecks/tests,
 browser and visual QA. When unsure, delegate: raw content in the main context is
 re-read on every later turn.
 
-**Agents.** Prefer the custom agents in `~/.claude/agents/`; each fixes its own model,
-effort, and report format.
+### Agents
+
+Prefer the custom agents in `~/.claude/agents/`; each fixes its own model, effort, and
+report format.
 
 | `subagent_type` | Model  | Use for |
 |-----------------|--------|---------|
@@ -394,39 +400,37 @@ effort, and report format.
 | `senior`        | Sonnet | Bounded work needing judgment or taste (the cases in its description), or retrying after a `scout`/`worker` result was shallow or failed |
 | `reviewer`      | Sonnet | Independent review of a change it didn't make: fixed checklist, defects by severity, PASS/FAIL; never edits |
 
-**Keep `senior` tasks small.** Its whole context, including every image, is re-read
-each turn. Never hand it an open-ended goal like "build the X scene" or "polish Y".
-Split the work into stages with one checkable deliverable each (e.g. grey-box layout →
-review → materials → review → lighting), and state the deliverable and pass criterion
-in every prompt. It is hard-capped at 45 turns.
-
-**Built-in agents (fallback).** If you use `Explore`, `general-purpose` or `Plan`,
-always pass `model` (`"haiku"` or `"sonnet"`), since omitting it inherits the main
-model. Never pass `model: "opus"`. Never use `subagent_type: "fork"`.
-
-**Briefing.** Subagents start with an empty context. Give each one: a precise
-objective; exact files or scope and strict ownership boundaries; decisions already
-made; the report format if it differs from the agent's default; an instruction not to
-expand scope. For search prompts, put `Thoroughness: quick | medium | very thorough` on
-the first line. For slides, PDFs or images, "look at" means extract the text, then
-render and view any page with little or no text (steps in the `slides` skill); "image
-only" is never a final answer. Ask it to state coverage for any "not found". Never
-assign overlapping edits to concurrent agents.
-
-**Running them.** Launch independent pieces in parallel, but don't split work just to
-parallelize. When your next step depends on the result, pass `run_in_background:
-false`; never poll. Continue the same agent with `SendMessage` for related follow-ups.
-
-**Trust reports.** Don't re-read what a subagent summarized unless the report is
-ambiguous or a decision hinges on exact code; then read only the cited `file:line`
-ranges. Treat "not found" as unconfirmed unless the report says what was covered,
-including image-only pages, and close the gap first. If I say something is there, look
-again.
+- Keep `senior` tasks small. Its whole context, including every image, is re-read each
+  turn. Never hand it an open-ended goal like "build the X scene" or "polish Y". Split
+  the work into stages with one checkable deliverable each (e.g. grey-box layout →
+  review → materials → review → lighting), and state the deliverable and pass criterion
+  in every prompt. It is hard-capped at 45 turns.
+- Built-in agents are a fallback. If you use `Explore`, `general-purpose` or `Plan`,
+  always pass `model` (`"haiku"` or `"sonnet"`), since omitting it inherits the main
+  model. Never pass `model: "opus"`. Never use `subagent_type: "fork"`.
+- Briefing. Subagents start with an empty context. Give each one: a precise objective;
+  exact files or scope and strict ownership boundaries; decisions already made; the
+  report format if it differs from the agent's default; an instruction not to expand
+  scope. For search prompts, put `Thoroughness: quick | medium | very thorough` on the
+  first line. For slides, PDFs or images, "look at" means extract the text, then render
+  and view any page with little or no text (steps in the `slides` skill); "image only"
+  is never a final answer. Never assign overlapping edits to concurrent agents.
+- Running them. Launch independent pieces in parallel, but don't split work just to
+  parallelize. When your next step depends on the result, pass
+  `run_in_background: false`; never poll. Continue the same agent with `SendMessage`
+  for related follow-ups.
+- Trust reports. Don't re-read what a subagent summarized unless the report is
+  ambiguous or a decision hinges on exact code; then read only the cited `file:line`
+  ranges. Treat "not found" as unconfirmed unless the report says what was covered,
+  including image-only pages, and close the gap first. If I say something is there,
+  look again.
 
 <!-- C3 -->
-## 3. Reviewing changes (main agent only)
+## Reviewing changes (main agent only)
 
-**Subagent changes.** Before reporting one as done:
+### Subagent changes
+
+Before reporting one as done:
 1. Run `git diff --stat`, then read the diff of each changed source file (skip
    generated files, lockfiles, binaries, assets).
 2. Check it against the plan: correctness, edge cases, scope creep, consistency with
@@ -435,12 +439,14 @@ again.
 3. Fix small issues directly or send larger ones back with `file:line` notes, then have
    the implementing agent (or a `worker`) run targeted checks and report pass/fail.
 
-**Independent review by `reviewer`.** Whoever makes a change is the worst judge of it.
-Run it for any visual or spatial change (layout, spacing, styling that moves things, 3D
-models or scenes), whoever made it and however small; and for changes the main agent
-made itself that touch logic (calculations, dates, parsing, state, data transforms),
-change code other code calls or imports, or exceed ~80 changed lines. Skip it for
-trivial edits, copy, docs, comments, single config values, and colour-only changes.
+### Independent review by `reviewer`
+
+Whoever makes a change is the worst judge of it. Run it for any visual or spatial
+change (layout, spacing, styling that moves things, 3D models or scenes), whoever made
+it and however small; and for changes the main agent made itself that touch logic
+(calculations, dates, parsing, state, data transforms), change code other code calls or
+imports, or exceed ~80 changed lines. Skip it for trivial edits, copy, docs, comments,
+single config values, and colour-only changes.
 1. Before editing, list what the change touches: callers, imports, types, data shapes,
    shared state, neighbouring elements or meshes, and the conventions it must keep.
 2. After editing, check those yourself first (typecheck, targeted test, measurement).
@@ -451,7 +457,7 @@ trivial edits, copy, docs, comments, single config values, and colour-only chang
    minors in the final report; they don't block.
 
 <!-- C4 -->
-## 4. Verification and testing (all agents)
+## Verification and testing (all agents)
 
 Tests protect logic that can break silently: calculations, dates, parsing, data
 transforms, tricky state, plus one smoke test of the main flow. Don't test static
@@ -464,42 +470,137 @@ then DOM or Playwright assertions, and screenshots only when rendered behavior r
 it. Don't run the full suite after every edit or repeat a passing check unless relevant
 code changed. Delegate checks with verbose output to a `worker`.
 
-<!-- C5 or B9 or E5 -->
-## 5. Writing (all agents)
+<!-- C5 or B8 or E5 -->
+## Writing (all agents)
 
 <!-- C5 -->
 Applies to chat replies, UI, slides, docs, READMEs, reports, code comments, and
-commit/PR messages:
-- Don't pair every heading or item with a description that restates it; add one only
-  when it tells the reader something the label doesn't.
-- No taglines, mic-drop one-liners, or decorative labels (numbered eyebrows, spaced-out
-  kickers, tags that name the section). Number things only when order matters.
-- If deleting a line loses no information, delete it. Keep real content and anything
-  needed for accessibility or correctness.
-<!-- B9 -->
-- Dates: always write the month as an English name, short or long (10 Nov, 10 November,
-  10 Nov 2026). Never numeric forms like 11-10 or 11/10, which are ambiguous between
-  DD/MM and MM/DD. Exception: ISO 8601 (2026-11-10) where code, filenames, or data
-  formats require it.
+commit/PR messages. Write the way a knowledgeable person talks: plain, specific, direct.
+
+Chat replies:
+- Lead with the answer or outcome in the first line or two.
+- Then any decision you need from me, recommendation first. For a choice with
+  trade-offs, use a short table: option, what it gets me, what it costs.
+- Then only the detail I need to act. Aim to fit on one screen (about 15 lines); go
+  longer only when the content needs it.
+- If you cut something I might need, end with one line naming it ("Left out: the
+  per-file breakdown and the two rejected alternatives"), and I'll ask for it.
+  Skip the line when nothing material was cut.
+- Never shorten warnings, errors, failing checks, or anything I must act on.
+
+Length and structure (artifacts, pages, docs, notes, internal reports):
+- Default to the short, scannable version. Lead with the conclusion or answer, then
+  the supporting points. I'll ask for more detail or full paragraphs when I want them.
+- Structure for scanning: short headings in longer pieces, bullets of one idea each
+  (at most two lines), tables for comparing items across attributes, numbered steps
+  for procedures.
+- No intro paragraph announcing the content.
+- Keep each bullet a complete thought. If the reason matters, keep it in the bullet.
+- Use prose only for reasoning that breaks when split up, or when the format needs it.
+- Exceptions: follow the required form for graded or external writing (essays,
+  reports, emails, letters, word counts), and keep handovers, specs and instructions
+  complete. Brevity never drops a fact, caveat or step the reader needs.
+
+Say the specific thing:
+- Give the concrete fact, not a generic claim about it: "inventor of the first
+  train-coupling device", not "a revolutionary titan of industry". If you have no
+  specific, cut the claim. Never invent one to fill the gap (see Grounding).
+- Write "is" and "has". Not "serves as", "stands as", "functions as", "represents",
+  "boasts" or "features" when "is" or "has" works.
+- Name the actual relationship instead of "associated with" or "in connection with".
+- Name who said it, or drop it: no "experts argue", "observers note", "several sources".
+- Use one term for one thing throughout. Don't rotate synonyms for variety.
+- When information is missing, say once what you checked and what's missing. No vague
+  hedges ("while details are limited", "based on available information").
+- Marketing copy sells with specifics too, not brochure phrases ("nestled in the heart
+  of", "rich history", "natural beauty", "diverse array", "renowned").
+
+Cut anything that adds no information:
+- Descriptions that restate their heading or label.
+- Taglines, mic-drop one-liners, and recap endings ("In summary", "Overall").
+- Chatbot openers and closers ("Certainly!", "Great question", "You're absolutely
+  right", "It's worth noting", "I hope this helps", "Let me know if"). End with a
+  question only when a real decision is pending.
+- Signposting and setups: "In this section we'll", "Let's dive in", "Below is a
+  breakdown", "The catch?", "Here's the thing:", "Why this matters".
+- Trailing "-ing" commentary (", highlighting its importance", ", ensuring",
+  ", reflecting"). If the point matters, give it its own sentence with evidence.
+- Inflated significance ("plays a vital role", "marks a pivotal moment", "reflects
+  broader trends", "has shaped discussions about", "sets the stage for") and empty
+  intensifiers (truly, incredibly, seamlessly, quietly).
+- The challenges formula ("Despite these challenges", "Looking ahead"). Name a real
+  problem with specifics or leave it out.
+Test: if deleting a line loses no information, delete it. Keep real content and
+anything needed for accessibility or correctness.
+
+Don't define things by what they aren't when nobody said they were: no "It's not X,
+it's Y", "not just X but also Y", decorative "Y rather than X", or unprompted "should
+not be confused with". State Y directly.
+
+Change reports (commits, PRs, "what I changed"): list the concrete changes. No
+"refined", "enhanced", "streamlined", "improved clarity", "ensured", "while preserving".
+
+Never leave placeholders ("[Your Name]", "(add link here)") in finished text. If
+something is missing, ask or flag it at the top.
+
+Plain words over impressive ones: "used", not "utilized"; "wrote", not "authored".
+Avoid: delve, tapestry, testament, leverage, robust, seamless, elevate, unlock,
+pivotal, landscape, crucial, enhance, foster, garner, showcase, underscore, highlight
+(as a verb), bolster, intricate, interplay, meticulous, vibrant, multifaceted, align
+with, and "Additionally" to open a sentence. Rewrite the sentence plainly instead of
+swapping in a synonym.
+
+Formatting:
+- No bold lead-ins (a bolded phrase followed by regular text). Write one plain
+  sentence, use a real subheading, or use a parent bullet with sub-bullets.
+- Bold only what a skimmer must not miss. No emoji bullets, no em dashes (use a comma,
+  colon, parentheses, or a new sentence), no colon-split titles.
+- Headings in sentence case ("How we grow our reach"), unless a project style guide
+  says otherwise.
+- Vary sentence length. Don't write every sentence in the same medium-length,
+  comma-heavy shape.
+- Don't group things in threes by habit. Use as many items as there really are.
+- Short answers get no headings. Don't give every section the same shape.
+- No scare quotes around invented labels. Number things only when order matters.
+
+<!-- B8 -->
+Dates: always write the month as an English name, short or long (10 Nov, 10 November,
+10 Nov 2026). Never numeric forms like 11-10 or 11/10, which are ambiguous between
+DD/MM and MM/DD. Exception: ISO 8601 (2026-11-10) where code, filenames, or data
+formats require it.
 
 <!-- E5 -->
 Reading or making slides: use the `slides` skill.
 
-<!-- B10 -->
-## Sourced claims (all agents)
+<!-- B9 -->
+## Grounding (all agents)
 
-- Before a cited claim goes into graded or external writing, note the supporting quote
-  (file, page or slide, exact words). If the source doesn't say it, drop the citation or
-  write it as our own inference. Never attribute a combination of separate points to
-  the source.
+Whenever you say what a source says, requires, allows, or recommends (a brief, rubric,
+guide, spec, slides, codebase, docs, or an external reference):
+- Quote it. Give the exact words in quotation marks with the location: file plus
+  page, slide, or line, or a URL. No quote, no claim.
+- Keep sources and inference apart. Label anything that isn't a direct quote as
+  *my inference*, *assumption*, or *general knowledge*. Never present those as
+  requirements or as what a source says.
+- Say when you can't find it. Write "I couldn't find this in X (checked: ...)"
+  instead of filling the gap with a plausible guess. If it matters to the outcome, ask
+  me.
+- When unsure, say so. If you aren't certain a source, quote, or fact exists, check
+  it or flag it. Never invent a source, page number, or quote.
+- Subagents include the quote and location with any claim about what a source says.
+  The main agent never relays a source claim to me without its quote.
+
+For graded or external work, also:
+- If the source doesn't say it, drop the citation or write it as our own inference.
+  Never attribute a combination of separate points to one source.
 - If a source quotes someone else, cite the original or write "as cited in".
 - Label checks precisely: "exists/listed", "abstract only", or "claim matched to quote".
   Never plain "verified". Treat inherited labels as unconfirmed for final work.
-<!-- B10 and E4 -->
+<!-- B9 and E4 -->
 - Before a graded or external submission, run the `citation-audit` skill.
 
 <!-- always -->
-## 6. Completion
+## Completion
 
 Stop once the requested behavior is implemented, the appropriate checks pass, and no
 known material issue remains in scope. Report concisely: what changed (`file:line`),
@@ -705,11 +806,16 @@ answer. It is the signal to render the page and look at it.
    - `.key`: export to PDF first (step 3), then treat it as a PDF.
 2. Find every page with visual content by running
    `python3 ~/.claude/skills/slides/scripts/slide_inventory.py <file.pptx|file.pdf>`.
-   It marks a page VIEW if it has little text, any picture over 3% of the page, a chart,
-   a diagram or SmartArt, or heavy vector drawing, including pages that are half text and
-   half image. It ignores logos and backgrounds that repeat on most pages. View every
-   page it marks VIEW; the text layer alone doesn't cover them. If the script fails, view
-   every page that has any picture or chart.
+   It marks a page VIEW if it has little text, a picture over 3% of the page, a chart,
+   SmartArt or an embedded object, or more drawn shapes or lines than the deck usually
+   has (shape diagrams, flowcharts), including pages that are half text and half image.
+   It ignores images whose content repeats on most pages (logos, backgrounds).
+   Its list is the minimum you must view, not a guarantee. Also view:
+   - every page, when the deck is 15 pages or fewer (the script says so);
+   - any page whose extracted text reads like parts of a figure: short scattered labels,
+     "as shown", "see diagram", arrows, axis or legend words;
+   - any page where the task depends on visuals (diagrams, charts, layouts).
+   If the script fails, view every page that has any picture, chart or drawing.
 3. Render and view those pages.
    - `.pdf`: open it with Read and the `pages` parameter (up to 20 pages per call).
    - `.pptx`: `soffice --headless --convert-to pdf --outdir <scratch dir> <file>`, then
@@ -740,18 +846,27 @@ divider slides.
 
 Usage: python3 slide_inventory.py <file.pptx|file.pdf>
 
-Prints one line per slide/page and a final list of pages to view as images.
-A page is marked VIEW if it has little text, any non-template picture covering
-at least MIN_AREA of the page, a chart, a diagram/SmartArt, or heavy vector drawing.
-Pictures that repeat on most pages (logos, template backgrounds) are ignored.
+Prints one line per slide/page and a final list of pages that must be viewed as images.
+The list is a minimum, not a guarantee: see the slides skill for when to view more.
+
+A page is marked VIEW if it has little text, a non-template picture covering at least
+MIN_AREA of the page, a chart, a diagram/SmartArt/embedded object, or more drawn shapes
+or lines than the deck's plainer slides (shape diagrams, flowcharts, annotated figures).
+Pictures whose content repeats on most pages (logos, backgrounds) are ignored.
 """
 import hashlib
 import sys
 from collections import Counter
 
-MIN_TEXT = 20        # chars; below this the page is treated as image-only
-MIN_AREA = 0.03      # fraction of page area for a picture to count
-VECTOR_HEAVY = 40    # curves + rects on a PDF page that suggest a drawn chart/diagram
+MIN_TEXT = 20         # chars; below this the page is treated as image-only
+MIN_AREA = 0.03       # fraction of page area for a picture to count
+PPTX_EXTRA_SHAPES = 3 # drawn shapes above the deck baseline that suggest a diagram
+PPTX_EXTRA_LINES = 1  # connectors/lines/freeforms above the deck baseline
+PPTX_MIN_SHAPES = 3   # always flag this many drawn shapes...
+PPTX_MIN_LINES = 1    # ...or any connector/line, whatever the rest of the deck does
+PDF_EXTRA_VECTOR = 8  # rects+lines+curves above the deck baseline
+PDF_MIN_VECTOR = 100  # always flag this much drawing (LibreOffice text pages ~54)
+SHORT_DECK = 15       # at or below this many pages, view every page
 
 
 def is_template(count, total):
@@ -769,11 +884,17 @@ def pptx_inventory(path):
 
     def walk(shapes, info):
         for sh in shapes:
-            if sh.shape_type == MSO_SHAPE_TYPE.GROUP:
+            st = sh.shape_type
+            if st == MSO_SHAPE_TYPE.GROUP:
                 walk(sh.shapes, info)
                 continue
             if sh.has_text_frame:
                 info["text"] += len(sh.text_frame.text.strip())
+            if st == MSO_SHAPE_TYPE.AUTO_SHAPE:
+                info["shapes"] += 1
+            elif st in (MSO_SHAPE_TYPE.LINE, MSO_SHAPE_TYPE.FREEFORM) or \
+                    type(sh).__name__ == "Connector":
+                info["lines"] += 1
             if getattr(sh, "has_table", False) and sh.has_table:
                 for row in sh.table.rows:
                     for cell in row.cells:
@@ -791,16 +912,25 @@ def pptx_inventory(path):
                 info["pics"].append((hashlib.sha1(image.blob).hexdigest(), area))
             elif isinstance(sh, GraphicFrame) and not sh.has_table:
                 info["diagrams"] += 1  # SmartArt or embedded object
-            elif sh.shape_type in (MSO_SHAPE_TYPE.EMBEDDED_OLE_OBJECT,
-                                   MSO_SHAPE_TYPE.LINKED_OLE_OBJECT,
-                                   MSO_SHAPE_TYPE.MEDIA):
+            elif st in (MSO_SHAPE_TYPE.EMBEDDED_OLE_OBJECT,
+                        MSO_SHAPE_TYPE.LINKED_OLE_OBJECT, MSO_SHAPE_TYPE.MEDIA):
                 info["diagrams"] += 1
 
     for slide in prs.slides:
-        info = {"text": 0, "pics": [], "charts": 0, "diagrams": 0, "vector": 0}
+        info = {"text": 0, "pics": [], "charts": 0, "diagrams": 0,
+                "shapes": 0, "lines": 0, "vector": 0}
         walk(slide.shapes, info)
         pages.append(info)
     return pages
+
+
+def pdf_image_key(im):
+    try:
+        return hashlib.sha1(im["stream"].get_rawdata()).hexdigest()
+    except Exception:  # fall back to geometry if the stream can't be read
+        w, h = im["x1"] - im["x0"], im["bottom"] - im["top"]
+        return str((round(im["x0"]), round(im["top"]), round(w), round(h),
+                    im.get("srcsize")))
 
 
 def pdf_inventory(path):
@@ -811,13 +941,11 @@ def pdf_inventory(path):
         for page in pdf.pages:
             page_area = float(page.width * page.height)
             info = {"text": len((page.extract_text() or "").strip()), "pics": [],
-                    "charts": 0, "diagrams": 0,
-                    "vector": len(page.curves) + len(page.rects)}
+                    "charts": 0, "diagrams": 0, "shapes": 0, "lines": 0,
+                    "vector": len(page.curves) + len(page.rects) + len(page.lines)}
             for im in page.images:
                 w, h = im["x1"] - im["x0"], im["bottom"] - im["top"]
-                key = (round(im["x0"]), round(im["top"]), round(w), round(h),
-                       im.get("srcsize"))
-                info["pics"].append((str(key), w * h / page_area))
+                info["pics"].append((pdf_image_key(im), w * h / page_area))
             pages.append(info)
     return pages
 
@@ -839,6 +967,12 @@ def main():
     for p in pages:
         for key in {k for k, _ in p["pics"]}:
             seen[key] += 1
+    # Baseline = lower quartile, so a deck where most slides are diagrams still
+    # flags them (a median would make diagrams the norm and flag none).
+    def lower_quartile(key):
+        vals = sorted(p[key] for p in pages)
+        return vals[len(vals) // 4] if vals else 0
+    base = {k: lower_quartile(k) for k in ("shapes", "lines", "vector")}
 
     to_view = []
     for i, p in enumerate(pages, 1):
@@ -853,7 +987,12 @@ def main():
             reasons.append(f"{p['charts']} chart(s)")
         if p["diagrams"]:
             reasons.append(f"{p['diagrams']} diagram/object(s)")
-        if p["vector"] >= VECTOR_HEAVY:
+        if (p["shapes"] - base["shapes"] >= PPTX_EXTRA_SHAPES
+                or p["lines"] - base["lines"] >= PPTX_EXTRA_LINES
+                or p["shapes"] >= PPTX_MIN_SHAPES or p["lines"] >= PPTX_MIN_LINES):
+            reasons.append(f"drawn diagram ({p['shapes']} shapes, {p['lines']} lines)")
+        if (p["vector"] - base["vector"] >= PDF_EXTRA_VECTOR
+                or p["vector"] >= PDF_MIN_VECTOR):
             reasons.append(f"vector drawing ({p['vector']} shapes)")
         verdict = "VIEW: " + "; ".join(reasons) if reasons else "text only"
         print(f"p{i}: text={p['text']} chars -> {verdict}")
@@ -861,10 +1000,12 @@ def main():
             to_view.append(i)
 
     ignored = sum(1 for k, c in seen.items() if is_template(c, total))
-    print(f"\nPages to view as images ({len(to_view)}/{total}): "
+    print(f"\nMust view as images ({len(to_view)}/{total}): "
           f"{','.join(map(str, to_view)) or 'none'}")
     if ignored:
         print(f"Ignored {ignored} repeated template image(s) (logos/backgrounds).")
+    if 0 < total <= SHORT_DECK:
+        print(f"Short deck ({total} pages): view every page.")
 
 
 if __name__ == "__main__":

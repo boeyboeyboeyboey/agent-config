@@ -10,7 +10,7 @@ aliases can change. Recheck the actual model offered by the account before reuse
 | --- | --- | --- |
 | Narrow reconnaissance, commands, repeatable checks | Luna `high` | Keep bounded work on the smaller model. OpenAI recommends Luna for scoped tasks and triage. `high` is the local default, not a benchmark-derived optimum. |
 | Scoped implementation and routine code review | Luna `xhigh` | A local escalation for harder bounded work. Review difficulty and evidence decide when to use Sol; the author's model alone does not. |
-| Complex engineering, planning, difficult review | Sol `medium`/`high` | Matches OpenAI's guidance for complex technical work. Main-model configuration currently uses `xhigh`; delegated roles are separately scoped. |
+| Complex engineering, planning, difficult review | Sol `medium`/`high` | Matches OpenAI's guidance for complex technical work. The main agent currently runs Terra `medium`; delegated roles are separately scoped. |
 | Images, screens, bounded app workflows | Terra `medium` | Officially supported visual reasoning and computer use; `medium` is the documented starting effort. Higher efforts remain bounded exceptions. |
 | Longer drafts and revisions | Terra `medium` | Clear prose from a brief and relevant source material. The main agent owns analysis, decisions, and final fact-checking. |
 | Exceptional read-only critique | Astra `low`, approval-only | A personal usage-control rule. No benchmark establishes that this is the universally best planning configuration. |
