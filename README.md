@@ -1,19 +1,19 @@
 # Agent config
 
-My instructions, subagents and skills for [Claude Code](claude/CLAUDE.md) and [Codex](codex/AGENTS.md). I keep them here so I can send them to people, and so anyone curious can see how I run my AI agents.
+My instructions, subagents and skills for [Claude Code](claude/CLAUDE.md) and [Codex](codex/AGENTS.md).
 
 ## What the setup fixes
 
 Most rules here exist because an agent got something wrong by default.
 
-- Agents agree too easily. They're told to be blunt, sanity-check requests, and say so before building a bad idea.
-- The main model is the expensive one. It plans, decides and reviews; cheaper subagents do the searching, reading, editing and test runs.
-- Agents are bad judges of their own work. Delegated changes get read before they're reported done, and anything visual or logic-heavy goes to a separate reviewer.
-- Agents make up what sources say. Any claim about a doc, brief or codebase needs an exact quote and location, and guesses are labelled as guesses.
-- AI writing is padded. A writing section bans filler, stock phrases and the usual tells, and asks for the answer first.
-- Agents act without asking. Every commit, push, merge or branch switch needs a yes in chat, and secrets never get printed or committed.
+- Agents agree too easily: They're told to be blunt, sanity-check requests, and say so before building a bad idea.
+- The main model is the expensive one: It plans, decides and reviews; cheaper subagents do the searching, reading, editing and test runs.
+- Agents are bad judges of their own work: Delegated changes get read before they're reported done, and anything visual or logic-heavy goes to a separate reviewer.
+- Agents make up what sources say: Any claim about a doc, brief or codebase needs an exact quote and location, and guesses are labelled as guesses.
+- AI writing is padded: A writing section bans filler, stock phrases and the usual tells, and asks for the answer first.
+- Agents act without asking: Every commit, push, merge or branch switch needs a yes in chat, and secrets never get printed or committed.
 
-Both setups share these rules. They differ in which models do the work.
+Both setups share these rules, but differ in which models do the work.
 
 ## Claude Code
 
