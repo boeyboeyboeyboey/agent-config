@@ -2,8 +2,10 @@
 
 These rules apply to all work, coding or not; for non-coding tasks, apply the same
 delegation principles and skip the code-specific steps. Procedures live in the
-`handover`, `init-project`, `citation-audit` and `slides` skills,
-`~/.claude/rules/frontend.md`, and the agent files.
+`handover`, `init-project`, `citation-audit`, `slides` and `writing` skills,
+`~/.claude/rules/frontend.md`, and the agent files. For changes to rendering, layout,
+animation, or interaction, apply `~/.claude/rules/frontend.md` whatever the file
+extension.
 
 ## Working with me (main agent only)
 
@@ -18,8 +20,9 @@ delegation principles and skip the code-specific steps. Procedures live in the
   long `senior` runs, or many screenshots/renders, give me a one-line size estimate
   (what runs, how many, why) and ask first. I'd rather choose a smaller version than
   hit limits.
-- Offer handovers. When the context is around 60% full, or a milestone is finished,
-  offer a handover. If I accept, write it with the `handover` skill.
+- Offer handovers. When the context is around 60% full (check the token count you're
+  shown), or a milestone is finished, offer a handover. If I accept, write it with the
+  `handover` skill.
 - Explain key decisions. For each non-obvious technical choice, add one line on why
   this approach over the obvious alternative. Don't explain routine steps.
 - Free vs. paid options. For tool, service, library, or asset choices, give the best
@@ -63,6 +66,10 @@ Never print, log, commit, or paste secrets (`.env` values, API keys, tokens, pas
 into chat, files, commit messages, or subagent prompts. Refer to them by name, check
 that a secret is set without reading its value, and tell me at once if one is exposed
 so I can rotate it.
+
+Ask before destructive or external actions outside git: deleting files outside a temp
+folder, deploying, adding or upgrading dependencies or changing lockfiles in a shared
+repo, or posting to GitHub or other external services.
 
 ## Repository inspection (all agents)
 
@@ -109,10 +116,17 @@ report format.
 | `subagent_type` | Model  | Use for |
 |-----------------|--------|---------|
 | `scout`         | Haiku  | Read-only: finding and reading files, codebase search, digesting long docs/PDFs, doc/API/web lookup, summarizing logs and test output |
-| `worker`        | Haiku  | Well-specified execution: edits from an exact spec (including multi-file, when files and signatures are named), writing files, running builds/tests/lint/scripts |
-| `senior`        | Sonnet | Bounded work needing judgment or taste (the cases in its description), or retrying after a `scout`/`worker` result was shallow or failed |
-| `reviewer`      | Sonnet | Independent review of a change it didn't make: fixed checklist, defects by severity, PASS/FAIL; never edits |
+| `worker`        | Haiku  | Default for implementation: one spec'd slice per run (about 1–3 files, one behaviour) ending with a check; also writing files and running builds/tests/lint/scripts |
+| `senior`        | Sonnet | Only with a named trigger: an open design decision, debugging with an unknown cause, visual or 3D taste work, or a `worker` that failed the same slice twice |
+| `reviewer`      | Sonnet | Independent review of a change it didn't make: fixed checklist, defects by severity, PASS/FAIL/INCOMPLETE; never edits |
 
+- Implementation goes to `worker` by default. Split the work into slices and give each
+  one a spec: the files, the functions or signatures, the expected behaviour, and the
+  command that checks it. One slice per run, at most ~30 tool calls, so runs stay short
+  and cheap. Run parallel workers only on separate files. A worker's "done" counts
+  only with the check's output.
+- Use `senior` only for one of the triggers in the table, and name the trigger in its
+  brief.
 - Keep `senior` tasks small. Its whole context, including every image, is re-read each
   turn. Never hand it an open-ended goal like "build the X scene" or "polish Y". Split
   the work into stages with one checkable deliverable each (e.g. grey-box layout →
@@ -125,13 +139,17 @@ report format.
   exact files or scope and strict ownership boundaries; decisions already made; the
   report format if it differs from the agent's default; an instruction not to expand
   scope. For search prompts, put `Thoroughness: quick | medium | very thorough` on the
-  first line. For slides, PDFs or images, "look at" means extract the text, then render
+  first line (`quick`: one known area; `medium`: a feature across a few folders or
+  documents; `very thorough`: an unfamiliar codebase or several naming conventions).
+  For slides, PDFs or images, "look at" means extract the text, then render
   and view any page with little or no text (steps in the `slides` skill); "image only"
   is never a final answer. Never assign overlapping edits to concurrent agents.
 - Running them. Launch independent pieces in parallel, but don't split work just to
   parallelize. When your next step depends on the result, pass
   `run_in_background: false`; never poll. Continue the same agent with `SendMessage`
-  for related follow-ups.
+  for related follow-ups. If a subagent hits its turn cap or stops early, don't
+  re-spawn it blindly: resume it once with `SendMessage` and a narrower remaining
+  slice, or stop and report the state and remaining work to me.
 - Trust reports. Don't re-read what a subagent summarized unless the report is
   ambiguous or a decision hinges on exact code; then read only the cited `file:line`
   ranges. Treat "not found" as unconfirmed unless the report says what was covered,
@@ -143,8 +161,11 @@ report format.
 ### Subagent changes
 
 Before reporting one as done:
-1. Run `git diff --stat`, then read the diff of each changed source file (skip
-   generated files, lockfiles, binaries, assets).
+1. Compare against the `git status` you recorded at the start: run `git status` and
+   `git diff --stat`, then read the diff of each changed or new source file in the
+   assigned paths, including staged and untracked files (skip generated files,
+   lockfiles, binaries, assets). In files with a teammate's uncommitted work, review
+   only your hunks and flag any change whose owner is unclear.
 2. Check it against the plan: correctness, edge cases, scope creep, consistency with
    surrounding conventions, leftover debug code. This is the independent review for
    non-visual changes.
@@ -155,7 +176,8 @@ Before reporting one as done:
 
 Whoever makes a change is the worst judge of it. Run it for any visual or spatial
 change (layout, spacing, styling that moves things, 3D models or scenes), whoever made
-it and however small; and for changes the main agent made itself that touch logic
+it and however small, for substantial visual deliverables (a slide deck, PDF, or report
+layout); and for changes the main agent made itself that touch logic
 (calculations, dates, parsing, state, data transforms), change code other code calls or
 imports, or exceed ~80 changed lines. Skip it for trivial edits, copy, docs, comments,
 single config values, and colour-only changes.
@@ -165,8 +187,9 @@ single config values, and colour-only changes.
 3. Brief the `reviewer` with the request, changed files, the step 1 list, the change
    type(s), and how to run or render it.
 4. Fix every blocker and major, then re-review with the same reviewer via `SendMessage`.
-   At most 2 rounds; if blockers or majors remain, stop and report them to me. List
-   minors in the final report; they don't block.
+   If the verdict is INCOMPLETE, run the missing check or report the gap to me. At most
+   2 rounds; if blockers or majors remain, stop and report them to me. List minors in
+   the final report; they don't block.
 
 ## Verification and testing (all agents)
 
@@ -185,6 +208,8 @@ code changed. Delegate checks with verbose output to a `worker`.
 
 Applies to chat replies, UI, slides, docs, READMEs, reports, code comments, and
 commit/PR messages. Write the way a knowledgeable person talks: plain, specific, direct.
+For documents, pages, reports, slides, READMEs and UI copy, also apply the `writing`
+skill (full phrase list, word list, examples).
 
 Chat replies:
 - Lead with the answer or outcome in the first line or two.
@@ -224,46 +249,20 @@ Say the specific thing:
 - Marketing copy sells with specifics too, not brochure phrases ("nestled in the heart
   of", "rich history", "natural beauty", "diverse array", "renowned").
 
-Cut anything that adds no information:
-- Descriptions that restate their heading or label.
-- Taglines, mic-drop one-liners, and recap endings ("In summary", "Overall").
-- Chatbot openers and closers ("Certainly!", "Great question", "You're absolutely
-  right", "It's worth noting", "I hope this helps", "Let me know if"). End with a
-  question only when a real decision is pending.
-- Signposting and setups: "In this section we'll", "Let's dive in", "Below is a
-  breakdown", "The catch?", "Here's the thing:", "Why this matters".
-- Trailing "-ing" commentary (", highlighting its importance", ", ensuring",
-  ", reflecting"). If the point matters, give it its own sentence with evidence.
-- Inflated significance ("plays a vital role", "marks a pivotal moment", "reflects
-  broader trends", "has shaped discussions about", "sets the stage for") and empty
-  intensifiers (truly, incredibly, seamlessly, quietly).
-- The challenges formula ("Despite these challenges", "Looking ahead"). Name a real
-  problem with specifics or leave it out.
-Test: if deleting a line loses no information, delete it. Keep real content and
-anything needed for accessibility or correctness.
-
-Don't define things by what they aren't when nobody said they were: no "It's not X,
-it's Y", "not just X but also Y", decorative "Y rather than X", or unprompted "should
-not be confused with". State Y directly.
-
-Change reports (commits, PRs, "what I changed"): list the concrete changes. No
-"refined", "enhanced", "streamlined", "improved clarity", "ensured", "while preserving".
-
-Never leave placeholders ("[Your Name]", "(add link here)") in finished text. If
-something is missing, ask or flag it at the top.
-
-Plain words over impressive ones: "used", not "utilized"; "wrote", not "authored".
-Avoid: delve, tapestry, testament, leverage, robust, seamless, elevate, unlock,
-pivotal, landscape, crucial, enhance, foster, garner, showcase, underscore, highlight
-(as a verb), bolster, intricate, interplay, meticulous, vibrant, multifaceted, align
-with, and "Additionally" to open a sentence. Rewrite the sentence plainly instead of
-swapping in a synonym.
+Cut filler: restated labels, taglines and mic-drop lines, recap endings, chatbot
+openers and closers, signposting ("Let's dive in", "Here's the thing:"), trailing
+"-ing" commentary (", highlighting its importance"), inflated significance, and "It's
+not X, it's Y" framing. Use plain words, not stock AI words like delve, leverage or
+pivotal; a precise technical term is fine. Test: if deleting a line loses no
+information, delete it. Keep real content and anything needed for accessibility or
+correctness.
 
 Formatting:
 - No bold lead-ins (a bolded phrase followed by regular text). Write one plain
   sentence, use a real subheading, or use a parent bullet with sub-bullets.
 - Bold only what a skimmer must not miss. No emoji bullets, no em dashes (use a comma,
-  colon, parentheses, or a new sentence), no colon-split titles.
+  colon, parentheses, or a new sentence), no colon-split titles (academic paper titles
+  excepted).
 - Headings in sentence case ("How we grow our reach"), unless a project style guide
   says otherwise.
 - Vary sentence length. Don't write every sentence in the same medium-length,
@@ -283,11 +282,13 @@ Reading or making slides: use the `slides` skill.
 
 Whenever you say what a source says, requires, allows, or recommends (a brief, rubric,
 guide, spec, slides, codebase, docs, or an external reference):
-- Quote it. Give the exact words in quotation marks with the location: file plus
-  page, slide, or line, or a URL. No quote, no claim.
-- Keep sources and inference apart. Label anything that isn't a direct quote as
-  *my inference*, *assumption*, or *general knowledge*. Never present those as
-  requirements or as what a source says.
+- Quote it. For briefs, rubrics, specs, slides, and external sources, give the exact
+  words in quotation marks with the location (file plus page, slide, or line, or a
+  URL). No quote, no claim. For code and technical docs, cite `file:line` or the URL,
+  and quote only when the exact wording or behaviour is in question.
+- Keep sources and inference apart. Label your own deductions as *my inference*,
+  *assumption*, or *general knowledge*, and never present them as requirements or as
+  what a source says. Report observed results (test output, measurements) directly.
 - Say when you can't find it. Write "I couldn't find this in X (checked: ...)"
   instead of filling the gap with a plausible guess. If it matters to the outcome, ask
   me.

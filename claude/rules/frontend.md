@@ -30,7 +30,9 @@ visual verification only when:
 
 Delegate routine browser verification, responsive checks, console inspection, and UI
 test execution to `worker`. Escalate to `senior` for visual polish, layout fidelity, or
-shader output against reference mockups.
+shader output against reference mockups. The `reviewer` takes the single screenshot
+pass for a change. Implementing agents use deterministic checks and take screenshots
+only to debug a visual failure.
 
 A single targeted browser verification pass is the default. If a defect is found, fix
 it and perform one targeted re-check. Do not test multiple viewport sizes unless

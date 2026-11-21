@@ -1,5 +1,5 @@
 # Documented portable subset; a runtime may include additional machine-specific settings.
-model = "gpt-6.1-terra"
+model = "gpt-6.2-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 

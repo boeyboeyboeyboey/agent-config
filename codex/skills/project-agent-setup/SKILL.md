@@ -33,8 +33,11 @@ verified commands, directory map, conventions, guardrails, and further reading. 
 existing docs by path and say when each should be read; do not copy their contents. Omit
 task status, plans, and anything already covered by global instructions.
 
-Have a subagent run each listed command once and mark any failures; do not report a
-failure as a pass. Show the draft to the user before saving it. In a shared git
-repository, add the new `AGENTS.md` to `.git/info/exclude` rather than committing it,
-unless the user says otherwise. Do not commit or make other repository changes without
+Have a subagent check each command against its definition and run only safe local
+checks (build, test, lint, typecheck, starting the dev server). Never run commands that
+deploy, publish, spend money, change shared state or data, or delete anything; mark
+those "inspected, not run". Mark any failures; do not report a failure as a pass. Show
+the draft to the user before saving it. In a shared git repository, add the new
+`AGENTS.md` to `.git/info/exclude` rather than committing it, unless the user says
+otherwise. Do not commit or make other repository changes without
 specific authorization.

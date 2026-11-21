@@ -21,13 +21,16 @@ description: Check whether cited sources support the exact claims in a report, e
    separate findings, flag the connection as an inference unless the source makes it.
    If the cited work quotes another author, cite the original when checked or mark the
    attribution as “as cited in.”
-4. For a high-risk audit, use a fresh, read-only reviewer who did not draft the document
-   when delegation is available and authorized. Give them the claims, sources, and
-   expected coverage. The main agent checks the supporting passages for every high-risk
+4. For a high-risk audit, use a fresh, read-only non-author reviewer subagent who did not
+   draft the document when delegation is available and authorized. Give them the claims,
+   sources, and expected coverage, and tell them to ignore report caps and return one row
+   per citation: claim, verbatim quote, page or slide, verdict, and what they couldn't
+   check. The main agent checks the supporting passages for every high-risk
    claim directly. If no reviewer can run, perform the check directly and report coverage.
 5. Report a table with claim, source and location, excerpt, verdict, and proposed fix.
    Put high-risk and unsupported claims first. Label a claim “matched to quote” only
    when an excerpt you checked directly supports the full claim. Suggest precise fixes
-   such as correcting a locator, qualifying the claim, or replacing the citation. Call
+   such as correcting a locator, or narrowing, replacing, or removing the claim. Keep it
+   as the team's own inference only when its premises are supported and cited. Call
    out high-risk excerpts for the user to check before submission. Apply edits only
    within the user's requested scope.

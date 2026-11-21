@@ -16,6 +16,9 @@ description: Create a project-level CLAUDE.md for a real, ongoing project that d
    Link docs by path; don't copy or @-import them, except a short binding policy file
    like AGENTS.md (under ~150 lines). Leave out task status and plans, and anything
    already in the global CLAUDE.md.
-4. Have a `worker` run each listed command once and mark failures. Show the user the
-   draft before saving. In a shared git repo, add it to `.git/info/exclude` rather than
-   committing it, unless the user says otherwise.
+4. Have a `worker` check each command against its definition and run only safe local
+   checks (build, test, lint, typecheck, starting the dev server). Never run commands
+   that deploy, publish, spend money, change shared state or data, or delete anything;
+   mark those 'inspected, not run'. Show the user the draft before saving. In a shared
+   git repo, add it to `.git/info/exclude` rather than committing it, unless the user
+   says otherwise.

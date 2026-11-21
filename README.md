@@ -10,7 +10,7 @@ Most rules here exist because an agent got something wrong by default.
 - **The main model is the expensive one**: It plans, decides and reviews; cheaper subagents do the searching, reading, editing and test runs.
 - **Agents are bad judges of their own work**: Delegated changes get read before they're reported done, and anything visual or logic-heavy goes to a separate reviewer.
 - **Agents make up what sources say**: Any claim about a doc, brief or codebase needs an exact quote and location, and guesses are labelled as guesses.
-- **AI writing is padded:** A writing section bans filler, stock phrases and the usual tells, and asks for the answer first.
+- **AI writing is padded:** A short writing section asks for the answer first and bans filler; a `writing` skill holds the full phrase and word lists for longer documents.
 - **Agents act without asking**: Every commit, push, merge or branch switch needs a yes in chat, and secrets never get printed or committed.
 
 Both setups share these rules, but differ in which models do the work.
@@ -25,7 +25,7 @@ Both setups share these rules, but differ in which models do the work.
 | `senior` | Sonnet | Bounded work that needs judgment: UI polish, debugging, writing |
 | `reviewer` | Sonnet | Reviews changes it didn't make; never edits |
 
-Skills: [handover](claude/skills/handover/SKILL.md) (hand off to a fresh chat), [init-project](claude/skills/init-project/SKILL.md) (draft a project `CLAUDE.md`), [citation-audit](claude/skills/citation-audit/SKILL.md) (check citations before submitting), [slides](claude/skills/slides/SKILL.md) (read and write decks).
+Skills: [handover](claude/skills/handover/SKILL.md) (hand off to a fresh chat), [init-project](claude/skills/init-project/SKILL.md) (draft a project `CLAUDE.md`), [citation-audit](claude/skills/citation-audit/SKILL.md) (check citations before submitting), [slides](claude/skills/slides/SKILL.md) (read and write decks), [writing](claude/skills/writing/SKILL.md) (style rules for documents, pages and slides).
 
 Also in [`claude/`](claude/): a [frontend rule](claude/rules/frontend.md) and a [settings example](claude/settings.example.json) that prompts before destructive Git commands. This runs on Claude Pro with no extra paid usage.
 
@@ -35,13 +35,13 @@ One known gap: a trailing force flag (`git push origin main --force`) gets past 
 
 | Agent | Model | Does |
 | --- | --- | --- |
-| Main | Terra `medium` | Plans, makes decisions, reviews |
+| Main | Sol `medium` | Plans, makes decisions, reviews |
 | Subagents | Luna | Search, commands, scoped edits, routine review |
 | | Terra | Visual and app work, longer drafts |
 | | Sol | Complex engineering, architecture, hard review |
 | | Astra | Rare read-only critique, only with approval |
 
-Also in [`codex/`](codex/): a [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules) with [test cases](verification/git-policy-cases.json), and [skills](codex/skills/).
+Also in [`codex/`](codex/): a [config example](codex/config.example.toml), [Git rules](codex/rules/default.rules) with [test cases](verification/git-policy-cases.json), and [skills](codex/skills/) for handovers, project setup, citation audits and writing.
 
 ## Using it
 

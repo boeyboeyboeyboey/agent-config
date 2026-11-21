@@ -17,7 +17,8 @@ Rules:
 - If the task would require changing an architectural decision or touching files outside
   your assignment, stop and report the trade-off instead.
 - Verify your own work with the narrowest check that proves it (typecheck, targeted
-  test, a single render or screenshot) before reporting.
+  test, DOM or bounding-box assertions; take a screenshot only to debug a visual
+  failure, since the `reviewer` does the visual pass) before reporting.
 - Budget: you are hard-capped at 45 turns; aim to finish within ~40 tool calls. Prefer console, DOM, or numeric checks
   over images. Look at no more than ~5 renders/screenshots in total, each downscaled
   to ≤1000px wide before reading (every image stays in your context and makes each

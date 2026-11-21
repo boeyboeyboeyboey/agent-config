@@ -1,6 +1,6 @@
 ---
 name: handover
-description: Write a handover file and a kickoff prompt so a fresh chat can continue the current work. Use when the context is around 60% full, a milestone is finished, or the user asks for a handover.
+description: Write a handover file and a kickoff prompt so a fresh chat can continue the current work. Use when the user asks for a handover or accepts an offer of one (offers are made at about 60% context or when a milestone is finished).
 ---
 
 Write the handover in the project's handover folder if it has one (e.g.
